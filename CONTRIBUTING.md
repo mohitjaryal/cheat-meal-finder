@@ -22,11 +22,3 @@ docs/api-reference
 All changes should be submitted through a Pull Request.
 
 Do not push directly to `main` for normal development work.
-
-## Before Opening a PR
-
-### Backend
-
-```bash
-cd backend
-pytest
