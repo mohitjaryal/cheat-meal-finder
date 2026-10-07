@@ -1,18 +1,9 @@
 """
-schema.py
-=========
 PostgreSQL schema for the street-food dish review platform, plus a small
 migration runner and FastAPI lifespan integration.
 
-Tables (from the ERD):
-    vendors, categories, dishes, users, user_reviews, moderation_log
+Tables vendors, categories, dishes, users, user_reviews, moderation_log
 
-Requirements:
-    pip install fastapi uvicorn asyncpg
-
-Usage:
-    python schema.py                  # applies the schema using DATABASE_URL
-    uvicorn schema:app --reload       # applies the schema on app startup
 """
 
 import asyncio
@@ -20,6 +11,7 @@ import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 import asyncpg
@@ -29,13 +21,8 @@ DATABASE_URL = os.getenv(
     "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/streetfood"
 )
 
-# ---------------------------------------------------------------------------
 # 1. ENUM TYPES
-# ---------------------------------------------------------------------------
-# The ERD lists `enum` for vendor_type and role but not the allowed values,
-# so the values below are ASSUMPTIONS. Adjust them to fit your domain.
-# DO blocks make the statements idempotent, since CREATE TYPE has no
-# IF NOT EXISTS clause.
+
 SQL_ENUMS = """
 DO $$
 BEGIN
@@ -51,9 +38,7 @@ END
 $$;
 """
 
-# ---------------------------------------------------------------------------
 # 2. TABLES
-# ---------------------------------------------------------------------------
 # Design notes:
 #   * IDENTITY columns replace SERIAL (the modern, SQL-standard approach).
 #     Switch to BIGINT if you expect billions of rows, e.g. reviews.
@@ -62,9 +47,7 @@ $$;
 #     constraints) or BOOLEAN in PostgreSQL.
 #   * Money is NUMERIC(10, 2), never FLOAT.
 SQL_TABLES = """
--- ---------------------------------------------------------------------
--- VENDORS: the stalls / restaurants that sell dishes
--- ---------------------------------------------------------------------
+VENDORS: the stalls / restaurants that sell dishes
 CREATE TABLE IF NOT EXISTS vendors (
     vendor_id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name           VARCHAR(150)      NOT NULL,
@@ -73,31 +56,27 @@ CREATE TABLE IF NOT EXISTS vendors (
     vendor_type    vendor_type_enum  NOT NULL DEFAULT 'street_stall'
 );
 
--- ---------------------------------------------------------------------
 -- CATEGORIES: dish classification (e.g. Snacks, Curries, Desserts)
--- ---------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS categories (
     category_id  INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name         VARCHAR(100) NOT NULL,
     CONSTRAINT uq_categories_name UNIQUE (name)
 );
 
--- ---------------------------------------------------------------------
 -- USERS: customers and admins (role decides who can moderate)
--- ---------------------------------------------------------------------
+-- Email uniqueness (ERD: UK) is enforced case-insensitively by the
+-- uq_users_email_lower index in the INDEXES section.
 CREATE TABLE IF NOT EXISTS users (
     user_id        INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     full_name      VARCHAR(150)    NOT NULL,
     email          VARCHAR(255)    NOT NULL,
     password_hash  VARCHAR(255)    NOT NULL,  -- store a bcrypt/argon2 hash only
     role           user_role_enum  NOT NULL DEFAULT 'customer',
-    created_at     TIMESTAMPTZ     NOT NULL DEFAULT now(),
-    CONSTRAINT uq_users_email UNIQUE (email)
+    created_at     TIMESTAMPTZ     NOT NULL DEFAULT now()
 );
 
--- ---------------------------------------------------------------------
--- DISHES: each dish belongs to one vendor and one category
--- ---------------------------------------------------------------------
+DISHES: each dish belongs to one vendor and one category
 CREATE TABLE IF NOT EXISTS dishes (
     dish_id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     vendor_id    INTEGER        NOT NULL,
@@ -106,6 +85,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     price        NUMERIC(10, 2) NOT NULL,
     spice_level  SMALLINT       NOT NULL DEFAULT 0,
     description  TEXT,
+    image_url    TEXT,
 
     CONSTRAINT fk_dishes_vendor
         FOREIGN KEY (vendor_id) REFERENCES vendors (vendor_id)
@@ -120,9 +100,7 @@ CREATE TABLE IF NOT EXISTS dishes (
     CONSTRAINT uq_dishes_vendor_name UNIQUE (vendor_id, name)
 );
 
--- ---------------------------------------------------------------------
--- USER_REVIEWS: a user's rating and comment on a dish
--- ---------------------------------------------------------------------
+USER_REVIEWS: a user's rating and comment on a dish
 CREATE TABLE IF NOT EXISTS user_reviews (
     review_id   INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     dish_id     INTEGER     NOT NULL,
@@ -145,9 +123,7 @@ CREATE TABLE IF NOT EXISTS user_reviews (
     CONSTRAINT uq_reviews_user_dish UNIQUE (user_id, dish_id)
 );
 
--- ---------------------------------------------------------------------
--- MODERATION_LOG: audit trail of admin actions on reviews
--- ---------------------------------------------------------------------
+MODERATION_LOG: audit trail of admin actions on reviews
 CREATE TABLE IF NOT EXISTS moderation_log (
     log_id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     admin_id    INTEGER      NOT NULL,
@@ -166,9 +142,14 @@ CREATE TABLE IF NOT EXISTS moderation_log (
 );
 """
 
-# ---------------------------------------------------------------------------
-# 3. INDEXES
-# ---------------------------------------------------------------------------
+# 3. PATCHES FOR EXISTING DATABASES
+# CREATE TABLE IF NOT EXISTS does not modify tables that already exist, so
+# changes made after the first run go here. Every statement is idempotent.
+SQL_PATCHES = """
+ALTER TABLE dishes ADD COLUMN IF NOT EXISTS image_url TEXT;
+"""
+
+# 4. INDEXES
 # PostgreSQL does NOT auto-index foreign key columns, so we add them for
 # fast joins and cascading deletes. Composite and partial indexes match the
 # most likely query patterns.
@@ -180,15 +161,15 @@ CREATE INDEX IF NOT EXISTS idx_dishes_category_id ON dishes (category_id);
 -- Filter dishes by spice level within a category (common UI filter)
 CREATE INDEX IF NOT EXISTS idx_dishes_category_spice ON dishes (category_id, spice_level);
 
--- Case-insensitive email lookup for login. Also blocks 'A@x.com' vs 'a@x.com'.
+-- Case-insensitive unique email (satisfies the ERD's UK on email).
+-- Also serves login lookups: WHERE lower(email) = lower($1)
 CREATE UNIQUE INDEX IF NOT EXISTS uq_users_email_lower ON users (lower(email));
 
 -- Latest reviews for a dish (paginated review list)
 CREATE INDEX IF NOT EXISTS idx_reviews_dish_created
     ON user_reviews (dish_id, created_at DESC);
 
--- "My reviews" page (uq_reviews_user_dish already covers user_id lookups,
--- but this supports ordering by date)
+-- "My reviews" page, ordered by date
 CREATE INDEX IF NOT EXISTS idx_reviews_user_created
     ON user_reviews (user_id, created_at DESC);
 
@@ -205,9 +186,7 @@ CREATE INDEX IF NOT EXISTS idx_modlog_admin_created
 CREATE INDEX IF NOT EXISTS idx_vendors_type ON vendors (vendor_type);
 """
 
-# ---------------------------------------------------------------------------
-# 4. BUSINESS-RULE TRIGGER
-# ---------------------------------------------------------------------------
+# 5. BUSINESS-RULE TRIGGER
 # The ERD labels the users -> moderation_log relationship "performs (admin)".
 # A plain FK can't check the user's role, so a trigger enforces that only
 # admins can appear as admin_id.
@@ -232,32 +211,30 @@ CREATE TRIGGER trg_modlog_admin_only
     FOR EACH ROW EXECUTE FUNCTION enforce_admin_moderator();
 """
 
-# ---------------------------------------------------------------------------
-# 5. TABLE / COLUMN COMMENTS (shows up in psql \d+ and tools like DBeaver)
-# ---------------------------------------------------------------------------
+# 6. TABLE / COLUMN COMMENTS (shows up in psql \d+ and tools like DBeaver)
 SQL_COMMENTS = """
 COMMENT ON TABLE  vendors        IS 'Food vendors (stalls, trucks, restaurants).';
+COMMENT ON TABLE  categories     IS 'Dish classifications.';
 COMMENT ON TABLE  dishes         IS 'Menu items offered by vendors.';
 COMMENT ON TABLE  users          IS 'Registered users; role controls moderation rights.';
 COMMENT ON TABLE  user_reviews   IS 'Ratings and comments left by users on dishes.';
-COMMENT ON TABLE  moderation_log IS 'Immutable audit log of admin actions on reviews.';
+COMMENT ON TABLE  moderation_log IS 'Audit log of admin actions on reviews.';
 COMMENT ON COLUMN dishes.spice_level  IS '0 = not spicy, 5 = extremely spicy.';
+COMMENT ON COLUMN dishes.image_url    IS 'URL of the dish photo.';
 COMMENT ON COLUMN user_reviews.rating IS 'Star rating from 1 to 5.';
 """
 
-# Order matters: types -> tables -> indexes -> triggers -> comments.
+# Order matters: types -> tables -> patches -> indexes -> triggers -> comments.
 MIGRATION_STEPS = [
     ("enums", SQL_ENUMS),
     ("tables", SQL_TABLES),
+    ("patches", SQL_PATCHES),
     ("indexes", SQL_INDEXES),
     ("triggers", SQL_TRIGGERS),
     ("comments", SQL_COMMENTS),
 ]
 
-
-# ---------------------------------------------------------------------------
-# 6. MIGRATION RUNNER
-# ---------------------------------------------------------------------------
+# 7. MIGRATION RUNNER
 async def apply_schema(pool: asyncpg.Pool) -> None:
     """Apply the schema atomically: everything succeeds or nothing does."""
     async with pool.acquire() as conn:
@@ -267,9 +244,7 @@ async def apply_schema(pool: asyncpg.Pool) -> None:
                 print(f"[schema] applied: {label}")
 
 
-# ---------------------------------------------------------------------------
-# 7. FASTAPI INTEGRATION
-# ---------------------------------------------------------------------------
+# 8. FASTAPI INTEGRATION
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Create one shared connection pool per process, and close it on exit."""
@@ -297,9 +272,10 @@ async def health(request: Request):
 
 
 if __name__ == "__main__":
+
     async def _main():
         pool = await asyncpg.create_pool(DATABASE_URL)
         await apply_schema(pool)
         await pool.close()
 
-    asyncio.run(_main())
+    asyncio.run(_main()) 
