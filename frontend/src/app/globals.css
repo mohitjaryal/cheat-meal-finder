@@ -1,26 +1,1624 @@
 @import "tailwindcss";
 
+/* ================================================================
+   CHEAT MEAL FINDER — STREET FRESH
+   GLOBAL DESIGN TOKENS
+================================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f2e7;
+  --foreground: #2c1a14;
+
+  --cream: #f7f2e7;
+  --terracotta: #c45a34;
+  --espresso: #2c1a14;
+  --olive: #5a6e44;
+  --mustard: #dda15e;
+
+  --surface: #fffaf0;
+  --border: #e5d8c5;
+  --muted: #786a61;
+
+  --gradient-food-stage:
+    radial-gradient(
+      circle at 76% 22%,
+      rgba(221, 161, 94, 0.14),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 30% 72%,
+      rgba(196, 90, 52, 0.34),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      #2c1a14 0%,
+      #351d15 50%,
+      #472418 100%
+    );
+
+  --gradient-cta:
+    linear-gradient(
+      110deg,
+      #c45a34 0%,
+      #d36d3f 58%,
+      #dda15e 145%
+    );
+
+  --gradient-page:
+    radial-gradient(
+      circle at 8% 4%,
+      rgba(221, 161, 94, 0.13),
+      transparent 24rem
+    ),
+    radial-gradient(
+      circle at 92% 94%,
+      rgba(90, 110, 68, 0.1),
+      transparent 26rem
+    ),
+    #f7f2e7;
 }
+
+/* ================================================================
+   TAILWIND THEME
+================================================================ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-cream: var(--cream);
+  --color-terracotta: var(--terracotta);
+  --color-espresso: var(--espresso);
+  --color-olive: var(--olive);
+  --color-mustard: var(--mustard);
+
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+
+  --font-sans: var(--font-manrope);
+  --font-display: var(--font-space-grotesk);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ================================================================
+   GLOBAL RESET
+================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
 }
 
 body {
-  background: var(--background);
+  margin: 0;
+  min-height: 100vh;
+
+  background: var(--gradient-page);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  font-family:
+    var(--font-manrope),
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+video,
+canvas {
+  display: block;
+}
+
+/* ================================================================
+   TEXT SELECTION
+================================================================ */
+
+::selection {
+  background: rgba(196, 90, 52, 0.22);
+  color: var(--espresso);
+}
+
+
+/* ================================================================
+   STREET FRESH — SPACE GROTESK DISPLAY TYPOGRAPHY
+================================================================ */
+
+.font-display {
+  font-family:
+    var(--font-space-grotesk),
+    var(--font-manrope),
+    Arial,
+    sans-serif;
+}
+
+/* ================================================================
+   STREET FRESH — SPACE GROTESK TYPOGRAPHY TEST
+================================================================ */
+
+.font-space-display {
+  font-family:
+    var(--font-space-grotesk),
+    var(--font-manrope),
+    Arial,
+    sans-serif;
+
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+/* ================================================================
+   AUTH FOOD STAGE
+================================================================ */
+
+.auth-food-stage {
+  background: var(--gradient-food-stage);
+}
+
+/* ================================================================
+   STREET FRESH BUTTON MOTION V1
+================================================================ */
+
+.auth-cta {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background: var(--gradient-cta);
+
+  box-shadow:
+    0 12px 28px rgba(196, 90, 52, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  transform: translate3d(0, 0, 0);
+
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease,
+    filter 260ms ease;
+}
+
+.auth-cta::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      110deg,
+      transparent 15%,
+      rgba(255, 255, 255, 0.13) 45%,
+      rgba(255, 255, 255, 0.22) 52%,
+      transparent 78%
+    );
+
+  transform: translateX(-130%);
+  transition: transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-cta > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .auth-cta:hover {
+    transform: translate3d(0, -2px, 0);
+    filter: saturate(1.06) brightness(1.025);
+
+    box-shadow:
+      0 17px 34px rgba(196, 90, 52, 0.26),
+      inset 0 1px 0 rgba(255, 255, 255, 0.23);
+  }
+
+  .auth-cta:hover::before {
+    transform: translateX(130%);
+  }
+
+  .auth-cta:hover .street-button-arrow,
+  .auth-cta:hover .auth-cta-arrow {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.auth-cta:active {
+  transform: translate3d(0, 1px, 0) scale(0.99);
+  filter: brightness(0.97);
+
+  box-shadow:
+    0 6px 14px rgba(196, 90, 52, 0.2),
+    inset 0 2px 4px rgba(44, 26, 20, 0.12);
+}
+
+.street-button-arrow,
+.auth-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-cta:focus-visible {
+  outline: 2px solid var(--espresso);
+  outline-offset: 3px;
+
+  box-shadow:
+    0 0 0 5px rgba(196, 90, 52, 0.15),
+    0 12px 28px rgba(196, 90, 52, 0.2);
+}
+
+.auth-cta:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ================================================================
+   AUTH GRAIN
+================================================================ */
+
+.auth-grain {
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(44, 26, 20, 0.055) 0.65px,
+      transparent 0.8px
+    ),
+    radial-gradient(
+      circle,
+      rgba(196, 90, 52, 0.045) 0.65px,
+      transparent 0.8px
+    );
+
+  background-position: 0 0, 12px 12px;
+  background-size: 24px 24px;
+  opacity: 0.38;
+}
+
+/* ================================================================
+   ORIGINAL STREET FRESH PROCEDURAL BACKGROUND
+================================================================ */
+
+.auth-procedural-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      circle at 14% 16%,
+      rgba(221, 161, 94, 0.2),
+      transparent 29%
+    ),
+    radial-gradient(
+      circle at 86% 18%,
+      rgba(196, 90, 52, 0.14),
+      transparent 31%
+    ),
+    radial-gradient(
+      circle at 82% 86%,
+      rgba(90, 110, 68, 0.13),
+      transparent 33%
+    ),
+    radial-gradient(
+      circle at 18% 82%,
+      rgba(196, 90, 52, 0.1),
+      transparent 31%
+    ),
+    linear-gradient(
+      135deg,
+      #f8f3e9 0%,
+      #f7f2e7 45%,
+      #f4ecdf 100%
+    );
+}
+
+.auth-procedural-texture {
+  position: absolute;
+  inset: -2%;
+
+  background-image:
+  radial-gradient(
+    circle at 30% 35%,
+    rgba(196, 90, 52, 0.07),
+    transparent 45%
+  ),
+  radial-gradient(
+    circle at 75% 70%,
+    rgba(90, 110, 68, 0.06),
+    transparent 50%
+  );
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  opacity: 0.24;
+  transform: scale(1.025);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* ================================================================
+   PROCEDURAL AURORA
+================================================================ */
+
+.auth-procedural-aurora {
+  position: absolute;
+  inset: -18%;
+
+  background:
+    radial-gradient(
+      circle at 22% 32%,
+      rgba(221, 161, 94, 0.3),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 77% 25%,
+      rgba(196, 90, 52, 0.2),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 68% 78%,
+      rgba(90, 110, 68, 0.16),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 28% 74%,
+      rgba(196, 90, 52, 0.11),
+      transparent 24%
+    );
+
+  opacity: 0.72;
+  transform: translate3d(0, 0, 0);
+
+  animation: auth-procedural-aurora-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes auth-procedural-aurora-drift {
+  0% {
+    transform: translate3d(-1.25%, 0.5%, 0) scale(1);
+    opacity: 0.62;
+  }
+
+  50% {
+    transform: translate3d(0.7%, -0.9%, 0) scale(1.035);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate3d(1.3%, 0.6%, 0) scale(1.055);
+    opacity: 0.68;
+  }
+}
+
+/* ================================================================
+   PROCEDURAL COLOR ORBS
+================================================================ */
+
+.auth-procedural-orb {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.auth-procedural-orb--mustard {
+  left: -8%;
+  top: 10%;
+  width: clamp(220px, 30vw, 520px);
+  aspect-ratio: 1;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(221, 161, 94, 0.2) 0%,
+      rgba(221, 161, 94, 0.075) 42%,
+      transparent 70%
+    );
+
+  animation: auth-procedural-orb-a 20s ease-in-out infinite alternate;
+}
+
+.auth-procedural-orb--terracotta {
+  right: -9%;
+  bottom: 4%;
+  width: clamp(240px, 32vw, 560px);
+  aspect-ratio: 1;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(196, 90, 52, 0.17) 0%,
+      rgba(196, 90, 52, 0.06) 44%,
+      transparent 72%
+    );
+
+  animation: auth-procedural-orb-b 24s ease-in-out infinite alternate;
+}
+
+.auth-procedural-orb--olive {
+  right: 25%;
+  top: -13%;
+  width: clamp(180px, 23vw, 420px);
+  aspect-ratio: 1;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(90, 110, 68, 0.12) 0%,
+      rgba(90, 110, 68, 0.045) 44%,
+      transparent 72%
+    );
+
+  animation: auth-procedural-orb-c 26s ease-in-out infinite alternate;
+}
+
+@keyframes auth-procedural-orb-a {
+  from {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(11%, 8%, 0) scale(1.08);
+  }
+}
+
+@keyframes auth-procedural-orb-b {
+  from {
+    transform: translate3d(2%, 4%, 0) scale(1.02);
+  }
+
+  to {
+    transform: translate3d(-10%, -7%, 0) scale(1.1);
+  }
+}
+
+@keyframes auth-procedural-orb-c {
+  from {
+    transform: translate3d(0, -3%, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(-8%, 10%, 0) scale(1.07);
+  }
+}
+
+/* ================================================================
+   PROCEDURAL EDITORIAL DOUBLE RINGS
+================================================================ */
+
+.auth-procedural-line {
+  position: absolute;
+  border: 1px solid rgba(196, 90, 52, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.auth-procedural-line--left {
+  left: -120px;
+  top: 22%;
+  width: 340px;
+  height: 340px;
+  border-color: rgba(196, 90, 52, 0.13);
+
+  animation: auth-procedural-line-spin 48s linear infinite;
+}
+
+.auth-procedural-line--right {
+  right: -100px;
+  bottom: 8%;
+  width: 280px;
+  height: 280px;
+  border-color: rgba(90, 110, 68, 0.12);
+
+  animation: auth-procedural-line-spin-reverse 54s linear infinite;
+}
+
+.auth-procedural-line::after {
+  content: "";
+  position: absolute;
+  inset: 22%;
+  border: 1px dashed rgba(221, 161, 94, 0.16);
+  border-radius: inherit;
+}
+
+@keyframes auth-procedural-line-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes auth-procedural-line-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* ================================================================
+   LEGACY AUTH BACKGROUND UTILITIES
+================================================================ */
+
+.auth-background-art {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  animation: auth-background-stage-drift 22s ease-in-out infinite alternate;
+}
+
+.auth-background-image {
+  filter: saturate(1.12) contrast(1.03) brightness(1.04);
+  transform: scale(1.025);
+}
+
+@keyframes auth-background-stage-drift {
+  0% {
+    transform: perspective(1200px) translate3d(-0.25%, -0.15%, 0)
+      rotateX(0deg) rotateY(0deg) scale(1.015);
+  }
+
+  50% {
+    transform: perspective(1200px) translate3d(0.3%, 0.15%, 12px)
+      rotateX(0.15deg) rotateY(-0.25deg) scale(1.03);
+  }
+
+  100% {
+    transform: perspective(1200px) translate3d(0.55%, -0.3%, 20px)
+      rotateX(-0.15deg) rotateY(0.3deg) scale(1.045);
+  }
+}
+
+.auth-background-glow {
+  animation: auth-background-glow-motion 15s ease-in-out infinite alternate;
+}
+
+@keyframes auth-background-glow-motion {
+  0% {
+    transform: translate3d(-1.5%, 0.8%, 0) scale(1);
+    opacity: 0.68;
+  }
+
+  50% {
+    transform: translate3d(0.75%, -0.8%, 0) scale(1.035);
+    opacity: 0.92;
+  }
+
+  100% {
+    transform: translate3d(1.7%, 0.7%, 0) scale(1.055);
+    opacity: 0.76;
+  }
+}
+
+/* ================================================================
+   FLOATING FOOD ELEMENTS
+================================================================ */
+
+@keyframes auth-float-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate3d(0, -8px, 8px) rotate(2deg);
+  }
+}
+
+@keyframes auth-float-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate3d(0, -6px, 6px) rotate(-2deg);
+  }
+}
+
+.auth-float-a {
+  animation: auth-float-a 5.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.auth-float-b {
+  animation: auth-float-b 6.5s ease-in-out infinite;
+  animation-delay: -2s;
+}
+
+/* ================================================================
+   HERO VIDEO
+================================================================ */
+
+.auth-hero-video {
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0) scale(1.002);
+}
+
+/* ================================================================
+   OPTIONAL GLASS SURFACE
+================================================================ */
+
+.auth-glass {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 240, 0.91),
+      rgba(247, 242, 231, 0.83)
+    );
+
+  box-shadow: 0 24px 70px rgba(44, 26, 20, 0.1);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ================================================================
+   AUTH DISCOVERY ATLAS V5.3
+================================================================ */
+
+.auth-discovery-atlas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.auth-atlas-map {
+  position: absolute;
+  inset: -4%;
+  opacity: 0.7;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+.auth-atlas-element {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+.auth-atlas-compass,
+.auth-atlas-pin-a,
+.auth-atlas-pin-b,
+.auth-atlas-food-truck {
+  display: none;
+}
+
+/* ================================================================
+   ATLAS — SIGNUP DESKTOP
+================================================================ */
+
+@media (min-width: 1024px) {
+  .auth-discovery-atlas--signup .auth-atlas-compass {
+    display: block;
+    width: 90px;
+    aspect-ratio: 1;
+    left: 13%;
+    top: 0.5%;
+    opacity: 0.6;
+    animation: auth-atlas-drift-a 18s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-pin-a {
+    display: block;
+    width: 38px;
+    aspect-ratio: 80 / 100;
+    right: 25%;
+    top: 2%;
+    opacity: 0.55;
+    animation: auth-atlas-pin-pulse 7s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-pin-b {
+    display: block;
+    width: 32px;
+    aspect-ratio: 80 / 100;
+    left: 4%;
+    bottom: 3%;
+    opacity: 0.48;
+    animation: auth-atlas-pin-pulse 8s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-food-truck {
+    display: block;
+    width: 135px;
+    aspect-ratio: 260 / 150;
+    right: 14%;
+    bottom: 0.5%;
+    opacity: 0.58;
+    animation: auth-atlas-drift-b 14s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   ATLAS — LOGIN DESKTOP
+================================================================ */
+
+@media (min-width: 1024px) {
+  .auth-discovery-atlas--login .auth-atlas-compass {
+    display: block;
+    width: 85px;
+    aspect-ratio: 1;
+    right: 13%;
+    top: 0.5%;
+    opacity: 0.55;
+    animation: auth-atlas-drift-a 18s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-pin-a {
+    display: block;
+    width: 34px;
+    aspect-ratio: 80 / 100;
+    left: 23%;
+    top: 2%;
+    opacity: 0.5;
+    animation: auth-atlas-pin-pulse 8s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-food-truck {
+    display: block;
+    width: 125px;
+    aspect-ratio: 260 / 150;
+    left: 13%;
+    bottom: 1%;
+    opacity: 0.52;
+    animation: auth-atlas-drift-b 15s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   ATLAS — TABLET
+================================================================ */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .auth-atlas-map {
+    opacity: 0.52;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-compass {
+    display: block;
+    width: 75px;
+    aspect-ratio: 1;
+    left: 4%;
+    top: 0.5%;
+    opacity: 0.45;
+    animation: auth-atlas-drift-a 20s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-food-truck {
+    display: block;
+    width: 115px;
+    aspect-ratio: 260 / 150;
+    right: 5%;
+    bottom: 1%;
+    opacity: 0.45;
+    animation: auth-atlas-drift-b 18s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   ATLAS — MOBILE
+================================================================ */
+
+@media (max-width: 639px) {
+  .auth-atlas-map {
+    opacity: 0.36;
+    inset: -2%;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-pin-a {
+    display: block;
+    width: 30px;
+    aspect-ratio: 80 / 100;
+    right: 5%;
+    top: 5%;
+    opacity: 0.36;
+    animation: auth-atlas-pin-pulse 9s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--signup .auth-atlas-food-truck {
+    display: block;
+    width: 95px;
+    aspect-ratio: 260 / 150;
+    left: 4%;
+    bottom: 3%;
+    opacity: 0.35;
+    animation: auth-atlas-drift-b 20s ease-in-out infinite;
+  }
+}
+
+@media (max-width: 1023px) {
+  .auth-discovery-atlas--login .auth-atlas-pin-a {
+    display: block;
+    width: 30px;
+    aspect-ratio: 80 / 100;
+    left: 5%;
+    top: 5%;
+    opacity: 0.36;
+    animation: auth-atlas-pin-pulse 9s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-food-truck {
+    display: block;
+    width: 95px;
+    aspect-ratio: 260 / 150;
+    right: 4%;
+    bottom: 3%;
+    opacity: 0.35;
+    animation: auth-atlas-drift-b 20s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   ATLAS ANIMATIONS
+================================================================ */
+
+@keyframes auth-atlas-drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-3deg);
+  }
+
+  50% {
+    transform: translate3d(8px, -9px, 0) rotate(3deg);
+  }
+}
+
+@keyframes auth-atlas-drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(2deg);
+  }
+
+  50% {
+    transform: translate3d(-9px, 7px, 0) rotate(-3deg);
+  }
+}
+
+@keyframes auth-atlas-pin-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: 0.65;
+  }
+}
+
+/* ================================================================
+   STREET FRESH MOTION V1.1 — LEGACY
+================================================================ */
+
+.street-page-reveal {
+  opacity: 0;
+  animation: street-page-enter 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  backface-visibility: hidden;
+}
+
+@keyframes street-page-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0) scale(0.985);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* ================================================================
+   STREET FRESH MOTION V2
+================================================================ */
+
+.street-stagger-reveal {
+  opacity: 0;
+  animation: street-stagger-enter 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes street-stagger-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.street-motion-nav {
+  animation: street-nav-enter 500ms ease-out both;
+}
+
+@keyframes street-nav-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.street-motion-story {
+  animation:
+    street-story-enter 650ms cubic-bezier(0.22, 1, 0.36, 1) 650ms both;
+}
+
+@keyframes street-story-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.street-motion-footer {
+  animation: street-footer-enter 550ms ease-out 900ms both;
+}
+
+@keyframes street-footer-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ================================================================
+   PREMIUM AUTH V5.1 — FINAL MERGED STYLES
+================================================================ */
+
+/* Premium form glass */
+.street-premium-glass {
+  position: relative;
+  isolation: isolate;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 251, 244, 0.97) 0%,
+      rgba(248, 240, 226, 0.94) 52%,
+      rgba(241, 226, 207, 0.91) 100%
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.82);
+
+  box-shadow:
+    0 32px 85px rgba(44, 26, 20, 0.17),
+    0 12px 34px rgba(196, 90, 52, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+
+  backdrop-filter: blur(12px) saturate(135%);
+  -webkit-backdrop-filter: blur(12px) saturate(135%);
+}
+
+.street-premium-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.42) 0%,
+      transparent 26%,
+      transparent 72%,
+      rgba(221, 161, 94, 0.09) 100%
+    );
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Premium cinematic frame */
+/*
+   IMPORTANT:
+   No position property here.
+   Tailwind absolute/inset-0 controls hero layout.
+*/
+.street-cinematic-frame {
+  isolation: isolate;
+
+  border: 1px solid rgba(255, 250, 240, 0.68);
+
+  box-shadow:
+    0 34px 90px rgba(44, 26, 20, 0.23),
+    0 12px 36px rgba(196, 90, 52, 0.09),
+    0 0 0 1px rgba(221, 161, 94, 0.1);
+}
+
+.street-cinematic-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(221, 161, 94, 0.14) 0%,
+      transparent 24%,
+      transparent 76%,
+      rgba(196, 90, 52, 0.1) 100%
+    );
+
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Darker, readable hero story */
+.street-premium-story {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(44, 26, 20, 0.94) 0%,
+      rgba(53, 29, 21, 0.89) 100%
+    );
+
+  border: 1px solid rgba(255, 250, 240, 0.27);
+
+  box-shadow:
+    0 18px 42px rgba(20, 10, 7, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ================================================================
+   MOBILE ADJUSTMENTS
+================================================================ */
+
+@media (max-width: 639px) {
+  .auth-procedural-texture {
+    inset: 0;
+    background-size: auto 100%;
+    opacity: 0.16;
+  }
+
+  .auth-procedural-aurora {
+    inset: -12%;
+    opacity: 0.58;
+    animation-duration: 24s;
+  }
+
+  .auth-procedural-orb--mustard,
+  .auth-procedural-orb--terracotta,
+  .auth-procedural-orb--olive {
+    animation-duration: 28s;
+  }
+
+  .auth-procedural-line--left {
+    left: -180px;
+    opacity: 0.72;
+  }
+
+  .auth-procedural-line--right {
+    right: -170px;
+    opacity: 0.68;
+  }
+
+  .auth-float-a {
+    animation-duration: 6.5s;
+  }
+
+  .auth-float-b {
+    animation-duration: 7.5s;
+  }
+
+  .street-stagger-reveal {
+    animation-duration: 520ms;
+  }
+
+  .street-motion-nav {
+    animation-duration: 420ms;
+  }
+
+  .street-motion-story {
+    animation-duration: 550ms;
+  }
+
+  .street-motion-footer {
+    animation-duration: 450ms;
+  }
+
+  .street-premium-glass {
+    backdrop-filter: blur(6px) saturate(115%);
+    -webkit-backdrop-filter: blur(6px) saturate(115%);
+  }
+
+  .street-premium-story {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .auth-procedural-aurora,
+  .auth-procedural-orb,
+  .auth-procedural-line,
+  .auth-background-art,
+  .auth-background-image,
+  .auth-background-glow,
+  .auth-float-a,
+  .auth-float-b,
+  .auth-hero-video,
+  .auth-atlas-element,
+  .street-page-reveal,
+  .street-stagger-reveal,
+  .street-motion-nav,
+  .street-motion-story,
+  .street-motion-footer {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .street-page-reveal,
+  .street-stagger-reveal,
+  .street-motion-nav,
+  .street-motion-story,
+  .street-motion-footer {
+    opacity: 1 !important;
+  }
+
+  .auth-cta,
+  .auth-cta::before,
+  .street-button-arrow,
+  .auth-cta-arrow,
+  .street-premium-glass,
+  .street-cinematic-frame,
+  .street-premium-story {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .auth-cta:hover,
+  .auth-cta:active,
+  .auth-cta:hover .street-button-arrow,
+  .auth-cta:hover .auth-cta-arrow {
+    transform: none !important;
+  }
+}
+
+/* ================================================================
+   STREET FRESH — GLASSMORPHISM V5.2
+   PREMIUM TRANSLUCENT AUTH FORM
+================================================================ */
+
+.street-premium-glass {
+  position: relative;
+  isolation: isolate;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 252, 246, 0.78) 0%,
+      rgba(247, 242, 231, 0.72) 48%,
+      rgba(244, 232, 215, 0.76) 100%
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.78);
+
+  box-shadow:
+    0 30px 85px rgba(44, 26, 20, 0.17),
+    0 12px 32px rgba(196, 90, 52, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(196, 90, 52, 0.06);
+
+  backdrop-filter: blur(22px) saturate(155%);
+  -webkit-backdrop-filter: blur(22px) saturate(155%);
+}
+
+/* ================================================================
+   STREET FRESH V5.3 — PREMIUM TEXT CLARITY
+================================================================ */
+
+.street-premium-glass {
+  color: #2c1a14;
+}
+
+/* Primary text inside form */
+.street-premium-glass h1,
+.street-premium-glass h2 {
+  color: #2c1a14;
+}
+
+/* Form labels */
+.street-premium-glass label {
+  color: #35231c;
+  font-weight: 800;
+}
+
+/* Input text */
+.street-premium-glass input {
+  color: #2c1a14;
+}
+
+/* Input placeholders */
+.street-premium-glass input::placeholder {
+  color: #817267;
+  opacity: 1;
+}
+
+/* Muted descriptions */
+.street-premium-glass .text-muted {
+  color: #66564d;
+}
+
+/* Social Auth information */
+.street-premium-glass p {
+  text-rendering: optimizeLegibility;
+}
+
+/* ================================================================
+   STREET FRESH DISCOVERY ATLAS V5.4
+   RESPONSIVE CULINARY SERVING CLOCHE
+================================================================ */
+
+.auth-atlas-cloche {
+  display: none;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* ================================================================
+   DESKTOP — SIGNUP + LOGIN
+================================================================ */
+
+@media (min-width: 1024px) {
+  .auth-discovery-atlas--signup .auth-atlas-cloche {
+    display: block;
+
+    width: 110px;
+    aspect-ratio: 240 / 180;
+
+    left: 10%;
+    bottom: 0%;
+
+    opacity: 0.72;
+
+    animation: auth-atlas-drift-a 19s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+
+    width: 120px;
+    aspect-ratio: 240 / 180;
+
+    right: 2%;
+    bottom: 14%;
+
+    opacity: 0.4;
+
+    animation: auth-atlas-drift-b 20s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   TABLET
+================================================================ */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .auth-discovery-atlas--signup .auth-atlas-cloche {
+    display: block;
+
+    width: 95px;
+    aspect-ratio: 240 / 180;
+
+    right: 3%;
+    top: 46%;
+
+    opacity: 0.3;
+
+    animation: auth-atlas-drift-a 22s ease-in-out infinite;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+
+    width: 95px;
+    aspect-ratio: 240 / 180;
+
+    left: 3%;
+    top: 46%;
+
+    opacity: 0.3;
+
+    animation: auth-atlas-drift-b 22s ease-in-out infinite;
+  }
+}
+
+/* ================================================================
+   MOBILE
+================================================================ */
+
+@media (max-width: 639px) {
+  .auth-discovery-atlas--signup .auth-atlas-cloche {
+    display: block;
+
+    width: 72px;
+    aspect-ratio: 240 / 180;
+
+    right: 2%;
+    top: 45%;
+
+    opacity: 0.23;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+
+    width: 72px;
+    aspect-ratio: 240 / 180;
+
+    left: 2%;
+    top: 45%;
+
+    opacity: 0.23;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-atlas-cloche {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH MAGNETIC CURSOR V2
+   Hide native arrow when custom cursor is active.
+================================================================ */
+
+@media (hover: hover) and (pointer: fine) {
+  html.street-cursor-enabled,
+  html.street-cursor-enabled *,
+  html.street-cursor-enabled *::before,
+  html.street-cursor-enabled *::after {
+    cursor: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH — LOGIN DISCOVERY ATLAS VISIBILITY V3
+================================================================ */
+
+/* DESKTOP */
+@media (min-width: 1024px) {
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+    width: 115px;
+    aspect-ratio: 240 / 180;
+
+    left: auto;
+    right: 0.5%;
+    top: auto;
+    bottom: 0;
+
+    opacity: 0.78;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-food-truck {
+    opacity: 0.68;
+  }
+
+  .auth-discovery-atlas--login .auth-atlas-map {
+    opacity: 0.78;
+  }
+}
+
+/* TABLET */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+    width: 95px;
+
+    left: auto;
+    right: 1%;
+    top: auto;
+    bottom: 1%;
+
+    opacity: 0.55;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 639px) {
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+    width: 72px;
+
+    left: auto;
+    right: 1%;
+    top: auto;
+    bottom: 1%;
+
+    opacity: 0.42;
+  }
+}
+/* ================================================================
+   STREET FRESH — LOGIN MOBILE ATLAS REFINEMENT V4
+================================================================ */
+
+@media (max-width: 639px) {
+  /* Food Truck — bottom-left */
+  .auth-discovery-atlas--login .auth-atlas-food-truck {
+    display: block;
+
+    width: 95px;
+    aspect-ratio: 260 / 150;
+
+    left: 3%;
+    right: auto;
+    bottom: 1%;
+
+    opacity: 0.58;
+  }
+
+  /* Compass — top-right, beside location pin */
+  .auth-discovery-atlas--login .auth-atlas-compass {
+    display: block;
+
+    width: 70px;
+    aspect-ratio: 1;
+
+    left: auto;
+    right: 3%;
+    top: 4%;
+    bottom: auto;
+
+    opacity: 0.7;
+
+    animation: auth-atlas-drift-a 20s ease-in-out infinite;
+  }
+
+  /* Keep Cloche at bottom-right */
+  .auth-discovery-atlas--login .auth-atlas-cloche {
+    display: block;
+
+    width: 72px;
+
+    left: auto;
+    right: 1%;
+    top: auto;
+    bottom: 1%;
+
+    opacity: 0.45;
+  }
+}
+
+/* ================================================================
+   STREET FRESH — SIGNUP MOBILE ATLAS REFINEMENT V5
+================================================================ */
+
+@media (max-width: 639px) {
+  /* Compass — top-left */
+  .auth-discovery-atlas--signup .auth-atlas-compass {
+    display: block;
+
+    width: 65px;
+    aspect-ratio: 1;
+
+    left: 3%;
+    right: auto;
+    top: 5%;
+    bottom: auto;
+
+    opacity: 0.68;
+
+    animation: auth-atlas-drift-a 20s ease-in-out infinite;
+  }
+
+  /* Food Truck — bottom-left */
+  .auth-discovery-atlas--signup .auth-atlas-food-truck {
+    display: block;
+
+    width: 95px;
+    aspect-ratio: 260 / 150;
+
+    left: 3%;
+    right: auto;
+    bottom: 1%;
+
+    opacity: 0.6;
+  }
+
+  /* Cloche — bottom-right */
+  .auth-discovery-atlas--signup .auth-atlas-cloche {
+    display: block;
+
+    width: 72px;
+    aspect-ratio: 240 / 180;
+
+    left: auto;
+    right: 1%;
+    top: auto;
+    bottom: 1%;
+
+    opacity: 0.45;
+  }
 }
