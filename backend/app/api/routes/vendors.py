@@ -12,6 +12,7 @@ from app.services.vendor_service import DeleteVendor
 vendors_routes = APIRouter(prefix="/vendors")
 
 
+
 # GET all vendors
 @vendors_routes.get("")
 async def all_vendors(pool=Depends(get_db)):
@@ -22,6 +23,7 @@ async def all_vendors(pool=Depends(get_db)):
 @vendors_routes.get("/{vendor_id}", status_code=status.HTTP_200_OK)
 async def vendor_id(vendor_id: int, pool=Depends(get_db)):
     return await get_vendor_by_id(pool, vendor_id)
+
 
 
 # POST route
@@ -47,7 +49,3 @@ async def update_existing_vendor(
     )
 
 
-# DELETE Route ( DELETE Vendor)
-@vendors_routes.delete("/{vendor_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_vendor(vendor_id: int, pool=Depends(get_db)):
-    return await DeleteVendor(pool, vendor_id)
