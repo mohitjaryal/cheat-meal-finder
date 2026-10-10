@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import AuthDiscoveryAtlas from "@/components/auth/AuthDiscoveryAtlas";
 import AuthMotionBackground from "@/components/auth/AuthMotionBackground";
+import ReducedMotionVideo from "@/components/auth/ReducedMotionVideo";
 import InteractiveTiltCard from "@/components/motion/InteractiveTiltCard";
 
 type AuthShellProps = {
@@ -76,7 +77,7 @@ export default function AuthShell({ children }: AuthShellProps) {
 
           <div className="flex shrink-0 items-center gap-2 text-sm sm:gap-3">
             <span className="hidden whitespace-nowrap text-[13px] font-semibold text-[#66564D] md:inline">
-              Already a member
+              Already a member ?
             </span>
 
             <Link
@@ -144,21 +145,13 @@ export default function AuthShell({ children }: AuthShellProps) {
             className="relative z-20 min-h-[430px] overflow-visible sm:min-h-[520px] lg:min-h-0"
           >
             <div className="street-cinematic-frame absolute inset-0 overflow-hidden rounded-[30px] bg-espresso sm:rounded-[32px]">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
+              {/* Reduced Motion Accessible Hero Video */}
+              <ReducedMotionVideo
+                src="/videos/auth/signup-street-food.mp4"
                 poster="/images/auth/auth-street-meal.png"
                 aria-hidden="true"
                 className="auth-hero-video absolute inset-0 h-full w-full object-cover object-center"
-              >
-                <source
-                  src="/videos/auth/signup-street-food.mp4"
-                  type="video/mp4"
-                />
-              </video>
+              />
 
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(44,26,20,0.06)_0%,rgba(44,26,20,0.01)_40%,rgba(44,26,20,0.44)_100%)]" />
 

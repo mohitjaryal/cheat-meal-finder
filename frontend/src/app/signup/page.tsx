@@ -1,11 +1,47 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import AuthShell from "@/components/auth/AuthShell";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 export default function SignupPage() {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [submissionMessage, setSubmissionMessage] = useState("");
+
   const inputStyles =
     "h-[48px] w-full rounded-xl border border-espresso/15 bg-[rgba(255,250,240,0.90)] px-4 text-sm text-espresso shadow-[inset_0_1px_0_rgba(255,255,255,0.90),0_4px_16px_rgba(44,26,20,0.04)] outline-none backdrop-blur-md transition duration-200 placeholder:text-muted/60 hover:border-mustard/60 hover:bg-[rgba(255,250,240,0.96)] focus:border-terracotta focus:bg-[#FFFAF0] focus:ring-4 focus:ring-terracotta/10 sm:h-[50px]";
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setSubmissionMessage("");
+    setPasswordError("");
+
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match.");
+      return;
+    }
+
+    setSubmissionMessage(
+      "Account registration is coming soon. Backend integration is currently in progress.",
+    );
+  }
+
+  function handlePasswordChange(value: string) {
+    setPassword(value);
+    setPasswordError("");
+    setSubmissionMessage("");
+  }
+
+  function handleConfirmPasswordChange(value: string) {
+    setConfirmPassword(value);
+    setPasswordError("");
+    setSubmissionMessage("");
+  }
 
   return (
     <AuthShell>
@@ -37,8 +73,12 @@ export default function SignupPage() {
 
       {/* =========================================================
           SIGNUP FORM — UI ONLY
+          FastAPI integration pending.
       ========================================================== */}
-      <form className="space-y-3.5">
+      <form
+        className="space-y-3.5"
+        onSubmit={handleSubmit}
+      >
         {/* Full Name */}
         <div
           className="street-stagger-reveal"
@@ -57,6 +97,9 @@ export default function SignupPage() {
             type="text"
             autoComplete="name"
             placeholder="Aarav Sharma"
+            required
+            aria-required="true"
+            onChange={() => setSubmissionMessage("")}
             className={inputStyles}
           />
         </div>
@@ -79,6 +122,9 @@ export default function SignupPage() {
             type="email"
             autoComplete="email"
             placeholder="you@email.com"
+            required
+            aria-required="true"
+            onChange={() => setSubmissionMessage("")}
             className={inputStyles}
           />
         </div>
@@ -102,6 +148,13 @@ export default function SignupPage() {
               type="password"
               autoComplete="new-password"
               placeholder="Create a password"
+              required
+              minLength={8}
+              aria-required="true"
+              value={password}
+              onChange={(event) =>
+                handlePasswordChange(event.target.value)
+              }
               className={inputStyles}
             />
           </div>
@@ -123,10 +176,31 @@ export default function SignupPage() {
               type="password"
               autoComplete="new-password"
               placeholder="Confirm password"
+              required
+              aria-required="true"
+              aria-invalid={Boolean(passwordError)}
+              aria-describedby={
+                passwordError ? "signup-password-error" : undefined
+              }
+              value={confirmPassword}
+              onChange={(event) =>
+                handleConfirmPasswordChange(event.target.value)
+              }
               className={inputStyles}
             />
           </div>
         </div>
+
+        {/* Password validation feedback */}
+        {passwordError && (
+          <p
+            id="signup-password-error"
+            role="alert"
+            className="rounded-xl border border-terracotta/25 bg-terracotta/5 px-4 py-2 text-xs font-semibold text-terracotta"
+          >
+            {passwordError}
+          </p>
+        )}
 
         {/* Primary CTA — entrance and hover animations separated */}
         <div
@@ -144,6 +218,17 @@ export default function SignupPage() {
             </span>
           </button>
         </div>
+
+        {/* UI-only submission feedback */}
+        {submissionMessage && (
+          <p
+            role="status"
+            aria-live="polite"
+            className="rounded-xl border border-terracotta/20 bg-surface/90 px-4 py-3 text-center text-xs leading-5 text-espresso sm:text-sm"
+          >
+            {submissionMessage}
+          </p>
+        )}
       </form>
 
       {/* =========================================================

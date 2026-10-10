@@ -1,11 +1,24 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import LoginShell from "@/components/auth/LoginShell";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
 export default function LoginPage() {
+  const [submissionMessage, setSubmissionMessage] = useState("");
+
   const inputStyles =
     "h-[52px] w-full rounded-xl border border-espresso/15 bg-[rgba(255,250,240,0.90)] px-4 text-sm text-espresso shadow-[inset_0_1px_0_rgba(255,255,255,0.90),0_4px_16px_rgba(44,26,20,0.04)] outline-none backdrop-blur-md transition duration-200 placeholder:text-muted/60 hover:border-mustard/60 hover:bg-[rgba(255,250,240,0.96)] focus:border-terracotta focus:bg-[#FFFAF0] focus:ring-4 focus:ring-terracotta/10 sm:h-[54px]";
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setSubmissionMessage(
+      "Login functionality is coming soon. Backend authentication integration is currently in progress.",
+    );
+  }
 
   return (
     <LoginShell>
@@ -38,7 +51,10 @@ export default function LoginPage() {
             LOGIN FORM
             UI-only: FastAPI integration pending.
         ======================================================== */}
-        <form className="mt-7 space-y-4">
+        <form
+          className="mt-7 space-y-4"
+          onSubmit={handleSubmit}
+        >
           {/* Email */}
           <div
             className="street-stagger-reveal"
@@ -57,6 +73,9 @@ export default function LoginPage() {
               type="email"
               autoComplete="email"
               placeholder="you@email.com"
+              required
+              aria-required="true"
+              onChange={() => setSubmissionMessage("")}
               className={inputStyles}
             />
           </div>
@@ -79,6 +98,9 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               placeholder="Enter your password"
+              required
+              aria-required="true"
+              onChange={() => setSubmissionMessage("")}
               className={inputStyles}
             />
           </div>
@@ -94,7 +116,7 @@ export default function LoginPage() {
             style={{ animationDelay: "600ms" }}
           >
             <button
-              type="button"
+              type="submit"
               className="auth-cta flex h-[52px] w-full items-center justify-center gap-3 rounded-xl px-5 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-terracotta/25 sm:h-[54px] sm:text-base"
             >
               <span className="relative z-10">Log In</span>
@@ -107,6 +129,17 @@ export default function LoginPage() {
               </span>
             </button>
           </div>
+
+          {/* UI-only submission feedback */}
+          {submissionMessage && (
+            <p
+              role="status"
+              aria-live="polite"
+              className="rounded-xl border border-terracotta/20 bg-surface/90 px-4 py-3 text-center text-xs leading-5 text-espresso sm:text-sm"
+            >
+              {submissionMessage}
+            </p>
+          )}
 
           {/* =====================================================
               FORGOT PASSWORD — STREET FRESH PREMIUM MICRO-MOTION
