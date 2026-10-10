@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import AuthDiscoveryAtlas from "@/components/auth/AuthDiscoveryAtlas";
 import AuthMotionBackground from "@/components/auth/AuthMotionBackground";
 import InteractiveTiltCard from "@/components/motion/InteractiveTiltCard";
+import ReducedMotionVideo from "@/components/auth/ReducedMotionVideo";
 
 type LoginShellProps = {
   children: ReactNode;
@@ -146,21 +147,13 @@ export default function LoginShell({ children }: LoginShellProps) {
             className="relative z-20 min-h-[430px] overflow-visible sm:min-h-[520px] lg:order-1 lg:min-h-0"
           >
             <div className="street-cinematic-frame absolute inset-0 overflow-hidden rounded-[30px] bg-espresso sm:rounded-[32px]">
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
+              {/* Reduced Motion Accessible Login Video */}
+              <ReducedMotionVideo
+                src="/videos/auth/login-street-food-v2.mp4"
                 poster="/images/auth/auth-login-night-feast.png"
                 aria-hidden="true"
                 className="auth-hero-video absolute inset-0 h-full w-full object-cover object-[62%_center] sm:object-[60%_center] lg:object-[58%_center]"
-              >
-                <source
-                  src="/videos/auth/login-street-food-v2.mp4"
-                  type="video/mp4"
-                />
-              </video>
+              />
 
               {/* Cinematic contrast */}
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(44,26,20,0.03)_0%,rgba(44,26,20,0.01)_42%,rgba(44,26,20,0.48)_100%)]" />
