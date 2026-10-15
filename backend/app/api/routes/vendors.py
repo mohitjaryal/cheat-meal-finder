@@ -33,7 +33,6 @@ async def create_vendor(request: CreateVendor, pool=Depends(get_db)):
         pool, request.name, request.location, request.opening_hours, request.vendor_type
     )
 
-
 # PUT Route (Update Route - Vendor)
 @vendors_routes.put("/{vendor_id}", status_code=status.HTTP_200_OK)
 async def update_existing_vendor(
@@ -47,5 +46,3 @@ async def update_existing_vendor(
         request.vendor_type,
         vendor_id,
     )
-
-
