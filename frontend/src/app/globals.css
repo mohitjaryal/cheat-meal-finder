@@ -94,6 +94,8 @@
 html {
   min-height: 100%;
   background: var(--background);
+
+  scroll-behavior: smooth;
 }
 
 body {
@@ -1620,5 +1622,1353 @@ canvas {
     bottom: 1%;
 
     opacity: 0.45;
+  }
+}
+/* ================================================================
+   STREET FRESH MOTION FLOW V1.2
+   CRAVING ORBIT — CINEMATIC HERO ENTRANCE
+================================================================ */
+
+/* LEFT EDITORIAL CONTENT */
+
+@keyframes street-hero-left-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(-45px, 35px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* CENTER FOOD ORBIT — SQUASH AND SETTLE */
+
+@keyframes street-hero-orbit-enter {
+  0% {
+    opacity: 0;
+
+    transform:
+      translate3d(0, 45px, 0)
+      scaleX(0.88)
+      scaleY(0.76);
+  }
+
+  65% {
+    opacity: 1;
+
+    transform:
+      translate3d(0, -5px, 0)
+      scaleX(1.025)
+      scaleY(1.035);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      translate3d(0, 0, 0)
+      scaleX(1)
+      scaleY(1);
+  }
+}
+
+/* RIGHT DISH DETAILS */
+
+@keyframes street-hero-right-enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(48px, 28px, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ================================================================
+   DESKTOP ANIMATION TIMING
+================================================================ */
+
+.street-hero-left {
+  animation:
+    street-hero-left-enter
+    1400ms cubic-bezier(0.22, 1, 0.36, 1)
+    150ms both;
+}
+
+.street-hero-orbit {
+  animation:
+    street-hero-orbit-enter
+    1700ms cubic-bezier(0.22, 1, 0.36, 1)
+    400ms both;
+}
+
+.street-hero-right {
+  animation:
+    street-hero-right-enter
+    1500ms cubic-bezier(0.22, 1, 0.36, 1)
+    750ms both;
+}
+
+/* ================================================================
+   MOBILE MOTION REFINEMENT
+================================================================ */
+
+@media (max-width: 639px) {
+  .street-hero-left {
+    animation-duration: 1100ms;
+  }
+
+  .street-hero-orbit {
+    animation-duration: 1350ms;
+    animation-delay: 300ms;
+  }
+
+  .street-hero-right {
+    animation-duration: 1200ms;
+    animation-delay: 500ms;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .street-hero-left,
+  .street-hero-orbit,
+  .street-hero-right {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH MOTION FLOW V2
+   CATEGORY EXPLORER — STAGGERED SCROLL REVEAL
+================================================================ */
+
+/* Default content remains visible until JavaScript activates reveal */
+
+[data-category-reveal] {
+  transition:
+    opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ================================================================
+   HIDDEN ENTRANCE STATES
+================================================================ */
+
+[data-category-reveal][data-reveal-state="hidden"] {
+  opacity: 0;
+  transform: translate3d(0, 38px, 0);
+}
+
+/* Editorial heading */
+
+[data-reveal-type="heading"][data-reveal-state="hidden"] {
+  transform: translate3d(0, 48px, 0);
+}
+
+/* Featured card — subtle squash entrance */
+
+[data-reveal-type="featured"][data-reveal-state="hidden"] {
+  transform:
+    translate3d(0, 48px, 0)
+    scaleX(0.97)
+    scaleY(0.94);
+}
+
+/* Supporting cards */
+
+[data-reveal-type="card"][data-reveal-state="hidden"] {
+  transform:
+    translate3d(0, 42px, 0)
+    scale(0.965);
+}
+
+/* ================================================================
+   VISIBLE STATES
+================================================================ */
+
+[data-category-reveal][data-reveal-state="visible"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Preserve desktop supporting-card staggered positioning */
+
+@media (min-width: 1024px) {
+  [data-reveal-type="card"][data-reveal-state="visible"]:nth-child(odd) {
+    transform: translate3d(0, -12px, 0);
+  }
+
+  [data-reveal-type="card"][data-reveal-state="visible"]:nth-child(even) {
+    transform: translate3d(0, 12px, 0);
+  }
+}
+
+/* ================================================================
+   MOBILE PERFORMANCE
+================================================================ */
+
+@media (max-width: 639px) {
+  [data-category-reveal] {
+    transition-duration: 800ms;
+  }
+
+  [data-reveal-type="card"][data-reveal-state="hidden"] {
+    transform:
+      translate3d(0, 28px, 0)
+      scale(0.98);
+  }
+
+  [data-reveal-type="card"] {
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-category-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH MOTION FLOW V3
+   CRAVING STAGE — CINEMATIC SCROLL REVEAL
+================================================================ */
+
+/* Default content remains visible until observer initializes */
+
+[data-spotlight-reveal] {
+  transition:
+    opacity 1050ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ================================================================
+   HIDDEN STATES
+================================================================ */
+
+[data-spotlight-reveal][data-reveal-state="hidden"] {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+}
+
+/* Editorial heading */
+
+[data-spotlight-type="heading"][data-reveal-state="hidden"] {
+  transform: translate3d(0, 54px, 0);
+}
+
+/* Left craving index */
+
+[data-spotlight-type="index"][data-reveal-state="hidden"],
+[data-spotlight-type="index-item"][data-reveal-state="hidden"] {
+  transform: translate3d(-38px, 16px, 0);
+}
+
+/* Center culinary stage */
+
+[data-spotlight-type="stage"][data-reveal-state="hidden"] {
+  transform:
+    translate3d(0, 55px, 0)
+    scale(0.93);
+}
+
+/* Right flavor story */
+
+[data-spotlight-type="story"][data-reveal-state="hidden"] {
+  transform: translate3d(44px, 20px, 0);
+}
+
+/* Footer */
+
+[data-spotlight-type="footer"][data-reveal-state="hidden"] {
+  transform: translate3d(0, 24px, 0);
+}
+
+/* ================================================================
+   VISIBLE STATES
+================================================================ */
+
+[data-spotlight-reveal][data-reveal-state="visible"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ================================================================
+   MOBILE REFINEMENT
+================================================================ */
+
+@media (max-width: 639px) {
+  [data-spotlight-reveal] {
+    transition-duration: 800ms;
+  }
+
+  [data-spotlight-type="stage"][data-reveal-state="hidden"] {
+    transform:
+      translate3d(0, 32px, 0)
+      scale(0.97);
+  }
+
+  [data-spotlight-type="index-item"] {
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-spotlight-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH MOTION FLOW V5
+   THE CRAVING PORTAL — CINEMATIC DISCOVERY REVEAL
+================================================================ */
+
+/* Default content stays visible until JavaScript initializes */
+
+[data-portal-reveal] {
+  transition:
+    opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ================================================================
+   HIDDEN STATES
+================================================================ */
+
+[data-portal-reveal][data-reveal-state="hidden"] {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+}
+
+/* Main editorial heading */
+
+[data-portal-type="heading"][data-reveal-state="hidden"] {
+  transform: translate3d(-35px, 28px, 0);
+}
+
+/* Discovery glass panel */
+
+[data-portal-type="panel"][data-reveal-state="hidden"] {
+  transform:
+    translate3d(35px, 32px, 0)
+    scale(0.96);
+}
+
+/* Search-inspired field */
+
+[data-portal-type="search"][data-reveal-state="hidden"] {
+  transform: translate3d(0, 20px, 0);
+}
+
+/* Craving chips */
+
+[data-portal-type="chip"][data-reveal-state="hidden"] {
+  transform:
+    translate3d(0, 22px, 0)
+    scale(0.97);
+}
+
+/* ================================================================
+   VISIBLE STATES
+================================================================ */
+
+[data-portal-reveal][data-reveal-state="visible"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ================================================================
+   CRAVING CHIP STAGGER
+================================================================ */
+
+[data-portal-type="chip"]:nth-child(1) {
+  transition-delay: 0ms;
+}
+
+[data-portal-type="chip"]:nth-child(2) {
+  transition-delay: 100ms;
+}
+
+[data-portal-type="chip"]:nth-child(3) {
+  transition-delay: 200ms;
+}
+
+[data-portal-type="chip"]:nth-child(4) {
+  transition-delay: 300ms;
+}
+
+/* ================================================================
+   METALLIC AMBIENT LIGHT
+================================================================ */
+
+@keyframes craving-portal-light {
+  0%,
+  100% {
+    transform: translate3d(-8%, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(8%, 0, 0);
+  }
+}
+
+.craving-portal-light {
+  animation:
+    craving-portal-light
+    20s ease-in-out infinite;
+}
+
+/* ================================================================
+   MOBILE REFINEMENT
+================================================================ */
+
+@media (max-width: 639px) {
+  [data-portal-reveal] {
+    transition-duration: 750ms;
+  }
+
+  [data-portal-type="heading"][data-reveal-state="hidden"] {
+    transform: translate3d(0, 28px, 0);
+  }
+
+  [data-portal-type="panel"][data-reveal-state="hidden"] {
+    transform:
+      translate3d(0, 30px, 0)
+      scale(0.98);
+  }
+
+  [data-portal-type="chip"] {
+    transition-delay: 0ms !important;
+  }
+}
+
+/* ================================================================
+   ACCESSIBILITY — REDUCED MOTION
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-portal-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .craving-portal-light {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+/* ================================================================
+   CHEAT MEAL FINDER — STREET FRESH PREMIUM
+
+   STREET FRESH MOTION FLOW V6
+
+   CRAVING COMPASS V3
+   THE LIQUID METAL FLAVOR LAB
+
+   FEATURES:
+
+   Metallic ambient lighting.
+   Premium glass surfaces.
+   Interactive flavor controls.
+   CSS-powered 3D food cards.
+   Food image depth.
+   Pointer-responsive metallic reflections.
+   Scroll-triggered reveals.
+   Reduced-motion accessibility.
+
+   All selectors scoped to .compass-v3.
+================================================================ */
+
+
+/* ================================================================
+   1. METALLIC BACKGROUND ANIMATION
+================================================================ */
+
+@keyframes compass-metal-flow {
+  0% {
+    transform: translate3d(-8%, 0, 0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translate3d(8%, 0, 0) rotate(2deg);
+  }
+
+  100% {
+    transform: translate3d(-8%, 0, 0) rotate(-2deg);
+  }
+}
+
+.compass-v3 .compass-metallic-light {
+  animation:
+    compass-metal-flow
+    20s ease-in-out infinite;
+
+  will-change: transform;
+}
+
+
+/* ================================================================
+   2. PREMIUM GLASS PANEL
+================================================================ */
+
+.compass-v3 .compass-glass-panel {
+  box-shadow:
+    0 30px 100px rgba(12, 7, 18, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(210, 139, 114, 0.08);
+
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+
+
+/* ================================================================
+   3. FLAVOR BUTTON MOTION
+================================================================ */
+
+.compass-v3 .compass-flavor-button {
+  transform: translate3d(0, 0, 0);
+
+  transition:
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 320ms ease,
+    border-color 320ms ease,
+    box-shadow 320ms ease;
+
+  backface-visibility: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .compass-v3 .compass-flavor-button:hover {
+    transform: translate3d(0, -4px, 0);
+
+    box-shadow:
+      0 15px 35px rgba(10, 5, 15, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  }
+
+  .compass-v3 .compass-flavor-button:hover svg {
+    transform: scale(1.1) rotate(-5deg);
+  }
+}
+
+.compass-v3 .compass-flavor-button svg {
+  transition:
+    transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.compass-v3 .compass-flavor-button:active {
+  transform: scale(0.98);
+}
+
+
+/* ================================================================
+   4. FOOD CARD 3D PERSPECTIVE
+================================================================ */
+
+.compass-v3 .compass-food-card {
+  transform:
+    perspective(1100px)
+    rotateX(var(--rotate-x, 0deg))
+    rotateY(var(--rotate-y, 0deg));
+
+  transform-style: preserve-3d;
+
+  backface-visibility: hidden;
+
+  transition:
+    transform 350ms ease,
+    border-color 350ms ease,
+    box-shadow 350ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .compass-v3 .compass-food-card:hover {
+    border-color: rgba(242, 215, 187, 0.45);
+
+    box-shadow:
+      0 30px 70px rgba(8, 4, 15, 0.38),
+      0 0 35px rgba(210, 139, 114, 0.08);
+  }
+}
+
+
+/* ================================================================
+   5. FOOD IMAGE DEPTH
+================================================================ */
+
+.compass-v3 .compass-food-image {
+  transform: translate3d(0, 0, 0) scale(1);
+
+  transition:
+    transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .compass-v3
+  .compass-food-card:hover
+  .compass-food-image {
+    transform:
+      translate3d(0, -8px, 0)
+      scale(1.055);
+  }
+}
+
+
+/* ================================================================
+   6. METALLIC POINTER REFLECTION
+================================================================ */
+
+.compass-v3 .compass-card-reflection {
+  background:
+    radial-gradient(
+      circle at
+      var(--pointer-x, 50%)
+      var(--pointer-y, 50%),
+      rgba(242, 215, 187, 0.17) 0%,
+      rgba(210, 139, 114, 0.05) 28%,
+      transparent 58%
+    );
+
+  opacity: 0;
+
+  transition:
+    opacity 350ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .compass-v3
+  .compass-food-card:hover
+  .compass-card-reflection {
+    opacity: 1;
+  }
+}
+
+
+/* ================================================================
+   7. SCROLL REVEAL SYSTEM
+
+   Content visible by default.
+
+   IntersectionObserver activates hidden states
+   only when JavaScript is available.
+================================================================ */
+
+.compass-v3 [data-compass-reveal] {
+  opacity: 1;
+
+  translate: 0 0;
+
+  transition:
+    opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 850ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* ================================================================
+   HIDDEN STATE
+================================================================ */
+
+.compass-v3
+[data-compass-reveal][data-reveal-state="hidden"] {
+  opacity: 0;
+
+  translate: 0 35px;
+}
+
+
+/* ================================================================
+   VISIBLE STATE
+================================================================ */
+
+.compass-v3
+[data-compass-reveal][data-reveal-state="visible"] {
+  opacity: 1;
+
+  translate: 0 0;
+}
+
+
+/* ================================================================
+   8. FOOD CARD REVEAL + 3D TRANSFORM
+
+   translate handles entrance.
+   transform handles 3D tilt.
+
+   These properties remain independent.
+================================================================ */
+
+.compass-v3 .compass-food-card[data-compass-reveal] {
+  transition:
+    opacity 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    translate 850ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 350ms ease,
+    border-color 350ms ease,
+    box-shadow 350ms ease;
+}
+
+.compass-v3
+.compass-food-card[data-reveal-state="hidden"] {
+  opacity: 0;
+
+  translate: 0 35px;
+}
+
+.compass-v3
+.compass-food-card[data-reveal-state="visible"] {
+  opacity: 1;
+
+  translate: 0 0;
+}
+
+
+/* ================================================================
+   9. RESPONSIVE MOTION REFINEMENT
+================================================================ */
+
+@media (max-width: 639px) {
+  .compass-v3 [data-compass-reveal] {
+    transition-duration: 650ms;
+  }
+
+  .compass-v3 .compass-food-card {
+    transform: none;
+  }
+
+  .compass-v3 .compass-glass-panel {
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+  }
+}
+
+
+/* ================================================================
+   10. REDUCED MOTION ACCESSIBILITY
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .compass-v3 *,
+  .compass-v3 *::before,
+  .compass-v3 *::after {
+    animation: none !important;
+
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+
+    scroll-behavior: auto !important;
+  }
+
+  .compass-v3 .compass-metallic-light {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .compass-v3 [data-compass-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+
+  .compass-v3 .compass-food-card {
+    transform: none !important;
+    translate: none !important;
+  }
+
+  .compass-v3 .compass-food-image {
+    transform: none !important;
+  }
+
+  .compass-v3 .compass-flavor-button {
+    transform: none !important;
+  }
+
+  .compass-v3 .compass-flavor-button svg {
+    transform: none !important;
+  }
+
+  .compass-v3 .compass-card-reflection {
+    opacity: 0 !important;
+  }
+}
+/* ================================================================
+   STREET FRESH MOTION FLOW V6.1
+   CRAVING COMPASS V3.1
+   LIQUID TITANIUM × MOLTEN COPPER
+================================================================ */
+
+.compass-titanium {
+  background: #141a20;
+  color: #fff8ef;
+}
+
+/* Metallic foundation */
+
+.compass-titanium .compass-titanium-background {
+  background:
+    radial-gradient(
+      ellipse at 78% 17%,
+      rgba(226, 140, 92, 0.23),
+      transparent 36%
+    ),
+    radial-gradient(
+      ellipse at 12% 70%,
+      rgba(119, 144, 155, 0.22),
+      transparent 42%
+    ),
+    linear-gradient(
+      128deg,
+      #10161c 0%,
+      #26343d 30%,
+      #41515a 52%,
+      #1c2932 75%,
+      #10171e 100%
+    );
+}
+
+/* Copper atmospheric orbs */
+
+.compass-titanium .compass-titanium-orb {
+  width: min(58vw, 760px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(115px);
+  pointer-events: none;
+}
+
+.compass-titanium .compass-titanium-orb-a {
+  background: rgba(226, 140, 92, 0.2);
+}
+
+.compass-titanium .compass-titanium-orb-b {
+  background: rgba(245, 177, 124, 0.14);
+}
+
+.compass-titanium .compass-titanium-orb-c {
+  background: rgba(120, 153, 170, 0.15);
+}
+
+/* Animated metallic reflection */
+
+.compass-titanium .compass-titanium-light {
+  background:
+    linear-gradient(
+      112deg,
+      transparent 27%,
+      rgba(255, 255, 255, 0.015) 39%,
+      rgba(232, 228, 220, 0.12) 49%,
+      rgba(245, 177, 124, 0.08) 53%,
+      transparent 68%
+    );
+}
+
+/* Fine metallic texture */
+
+.compass-titanium .compass-titanium-texture {
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.22) 0.5px,
+      transparent 0.8px
+    );
+
+  background-size: 22px 22px;
+  opacity: 0.11;
+}
+
+/* Metallic heading */
+
+.compass-titanium .compass-titanium-heading {
+  background:
+    linear-gradient(
+      110deg,
+      #fff1dd 0%,
+      #f5c69e 28%,
+      #e28c5c 52%,
+      #ffd9b5 76%,
+      #f4ad7b 100%
+    );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Premium glass surfaces */
+
+.compass-titanium .compass-titanium-panel,
+.compass-titanium .compass-titanium-counter,
+.compass-titanium .compass-titanium-mix,
+.compass-titanium .compass-titanium-empty {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.19),
+      rgba(191, 213, 224, 0.09) 45%,
+      rgba(226, 140, 92, 0.11)
+    );
+
+  box-shadow:
+    0 25px 75px rgba(4, 10, 16, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(245, 177, 124, 0.1);
+
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+/* Header icon */
+
+.compass-titanium .compass-titanium-icon {
+  color: #f5c69e;
+  border: 1px solid rgba(245, 198, 158, 0.45);
+  background: rgba(245, 198, 158, 0.12);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 24px rgba(226, 140, 92, 0.1);
+}
+
+/* Selection counter */
+
+.compass-titanium .compass-titanium-selection {
+  color: #ffe1c5;
+  border: 1px solid rgba(245, 198, 158, 0.3);
+  background: rgba(245, 198, 158, 0.12);
+}
+
+/* Clear button */
+
+.compass-titanium .compass-titanium-clear {
+  color: #f1e8df;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+
+  transition:
+    background-color 250ms ease,
+    border-color 250ms ease;
+}
+
+.compass-titanium .compass-titanium-clear:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.48);
+}
+
+/* Flavor glass tiles */
+
+.compass-titanium .compass-titanium-flavor {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.19),
+      rgba(255, 255, 255, 0.07) 55%,
+      rgba(226, 140, 92, 0.08)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 12px 26px rgba(2, 8, 12, 0.12);
+
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+.compass-titanium .compass-titanium-flavor.is-selected {
+  border-color: rgba(245, 198, 158, 0.85);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(226, 140, 92, 0.3),
+      rgba(245, 198, 158, 0.13) 55%,
+      rgba(255, 255, 255, 0.08)
+    );
+
+  box-shadow:
+    0 14px 35px rgba(226, 140, 92, 0.17),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 0 1px rgba(245, 198, 158, 0.1);
+}
+
+/* Professional icon stage */
+
+.compass-titanium .compass-titanium-flavor-icon {
+  color: var(--flavor-color, #f5c69e);
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.07)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 7px 18px rgba(0, 0, 0, 0.1);
+}
+
+.compass-titanium .compass-titanium-check {
+  color: #17212a;
+  background: #f5c69e;
+}
+
+/* Food cards */
+
+.compass-titanium .compass-titanium-card {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(91, 114, 126, 0.78),
+      rgba(36, 52, 62, 0.85) 55%,
+      rgba(20, 29, 37, 0.94)
+    );
+
+  box-shadow:
+    0 22px 55px rgba(0, 5, 10, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Food image stage */
+
+.compass-titanium .compass-titanium-food-stage {
+  background:
+    radial-gradient(
+      ellipse at 50% 40%,
+      rgba(245, 177, 124, 0.28),
+      transparent 58%
+    ),
+    linear-gradient(
+      145deg,
+      #42535e,
+      #25343f 60%,
+      #17232d
+    );
+}
+
+.compass-titanium .compass-titanium-halo {
+  border: 1px solid rgba(245, 198, 158, 0.3);
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(245, 198, 158, 0.17),
+      transparent 72%
+    );
+
+  box-shadow:
+    0 0 65px rgba(245, 177, 124, 0.13);
+}
+
+/* Match badge */
+
+.compass-titanium .compass-titanium-match {
+  color: #ffe2c5;
+  border: 1px solid rgba(245, 198, 158, 0.4);
+  background: rgba(15, 24, 32, 0.78);
+  backdrop-filter: blur(14px);
+}
+
+/* Flavor tags */
+
+.compass-titanium .compass-titanium-tag {
+  color: #f4e8dd;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+/* Show more button */
+
+.compass-titanium .compass-titanium-more {
+  color: #fff8ef;
+
+  border: 1px solid rgba(245, 198, 158, 0.45);
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(226, 140, 92, 0.34),
+      rgba(255, 255, 255, 0.12)
+    );
+
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(14px);
+
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.compass-titanium .compass-titanium-more:hover {
+  box-shadow:
+    0 18px 45px rgba(226, 140, 92, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Mobile performance */
+
+@media (max-width: 639px) {
+  .compass-titanium .compass-titanium-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .compass-titanium .compass-titanium-orb {
+    filter: blur(80px);
+  }
+}
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .compass-titanium .compass-titanium-light {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .compass-titanium .compass-titanium-flavor,
+  .compass-titanium .compass-titanium-card,
+  .compass-titanium .compass-titanium-more {
+    transition: none !important;
+  }
+}
+/* ================================================================
+   STREET FRESH PREMIUM
+   CRAVING COMPASS V4.1 — COMPACT CINEMATIC MOBILE
+
+   Mobile-only visual refinement.
+   Preserves Liquid Titanium × Molten Copper desktop design.
+================================================================ */
+
+@media (max-width: 639px) {
+  /* --------------------------------------------------------------
+     1. SECTION SPACING
+  -------------------------------------------------------------- */
+
+  .compass-v3.compass-titanium {
+    padding-top: 64px;
+    padding-bottom: 72px;
+  }
+
+  /* --------------------------------------------------------------
+     2. HEADER REFINEMENT
+  -------------------------------------------------------------- */
+
+  .compass-v3 #craving-compass-heading {
+    font-size: clamp(2.75rem, 11vw, 3.65rem);
+    line-height: 0.98;
+    letter-spacing: -0.075em;
+  }
+
+  .compass-v3 #craving-compass-heading + p {
+    margin-top: 18px;
+    line-height: 1.75;
+  }
+
+  .compass-v3 .compass-titanium-counter {
+    padding: 14px 20px;
+    gap: 16px;
+    border-radius: 20px;
+  }
+
+  /* --------------------------------------------------------------
+     3. SELECTOR PANEL
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-panel {
+    padding: 20px;
+    border-radius: 28px;
+  }
+
+  .compass-v3 .compass-titanium-selection {
+    padding: 9px 15px;
+  }
+
+  /* --------------------------------------------------------------
+     4. FLAVOR TILES
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-flavor {
+    min-height: 112px;
+    padding: 14px;
+    border-radius: 19px;
+  }
+
+  .compass-v3 .compass-titanium-flavor-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .compass-v3 .compass-titanium-flavor-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .compass-v3 .compass-titanium-flavor > span:nth-child(2) {
+    margin-top: 12px;
+  }
+
+  /* --------------------------------------------------------------
+     5. FOOD CARD IMAGE STAGE
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-food-stage {
+    height: 238px;
+  }
+
+  .compass-v3 .compass-food-image {
+    height: 225px;
+    width: 94%;
+  }
+
+  .compass-v3 .compass-titanium-halo {
+    width: 210px;
+    height: 210px;
+  }
+
+  /* --------------------------------------------------------------
+     6. FOOD CARDS
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-card {
+    border-radius: 25px;
+  }
+
+  .compass-v3 .compass-titanium-card > div:last-child {
+    padding: 20px;
+  }
+
+  /* --------------------------------------------------------------
+     7. SHOW MORE CTA
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-more {
+    min-height: 54px;
+    padding-inline: 24px;
+    max-width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* --------------------------------------------------------------
+     8. MOBILE TOUCH INTERACTION
+  -------------------------------------------------------------- */
+
+  .compass-v3 .compass-titanium-flavor,
+  .compass-v3 .compass-titanium-clear,
+  .compass-v3 .compass-titanium-more {
+    touch-action: manipulation;
+  }
+}
+
+/* ================================================================
+   EXTRA-SMALL MOBILE SAFETY — 360px AND BELOW
+================================================================ */
+
+@media (max-width: 360px) {
+  .compass-v3 .compass-titanium-panel {
+    padding: 16px;
+  }
+
+  .compass-v3 .compass-titanium-flavor {
+    padding: 12px;
+  }
+
+  .compass-v3 .compass-titanium-match {
+    right: 12px;
+    top: 12px;
+    padding: 7px 10px;
+    font-size: 9px;
+  }
+}
+/* ================================================================
+   STREET FRESH PREMIUM
+   CRAVING COMPASS V4.3 — MINIMAL MOBILE FOOTER
+
+   Inspired by Craving Stage editorial footer.
+   Mobile-only refinement.
+================================================================ */
+
+@media (max-width: 639px) {
+  .compass-v3 .compass-mobile-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 12px;
+    margin-top: 44px;
+    padding: 24px 0 0;
+
+    background: none;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.17);
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    text-align: center;
+  }
+
+  /* Demo disclaimer */
+
+  .compass-v3 .compass-mobile-footer p:first-child {
+    max-width: 340px;
+    margin: 0;
+
+    color: rgba(232, 228, 220, 0.65);
+    font-size: 12px;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  /* Street Fresh branding */
+
+  .compass-v3 .compass-mobile-footer p:last-child {
+    width: auto;
+    margin: 0;
+    padding: 0;
+
+    border: none;
+
+    color: #f0a477;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-align: center;
   }
 }
