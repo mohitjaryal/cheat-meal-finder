@@ -3,7 +3,6 @@ from app.main import app
 
 client = TestClient(app)
 
-def test_get_vendors():
+def test_get_vendors(client):
     response = client.get("/vendors")
-
     assert response.status_code == 200

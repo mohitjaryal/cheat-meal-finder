@@ -9,7 +9,8 @@ async def create_pool():
         port=Settings.DB_PORT,
         database=Settings.DB_NAME,
         user=Settings.DB_USER,
-        password=Settings.DB_PASSWORD
+        password=Settings.DB_PASSWORD,
+        ssl="require"
     )
 
     return pool
