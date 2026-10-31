@@ -1,3 +1,4 @@
+from app.schemas.dish import DishCreate, DishUpdate
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from decimal import Decimal
