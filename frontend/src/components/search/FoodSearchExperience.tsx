@@ -3,14 +3,16 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
 } from "react";
 
-import type { ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 
 import {
   ArrowDownRight,
@@ -23,6 +25,7 @@ import {
   ArrowsDownUp,
   ArrowCounterClockwise,
   CaretDown,
+  Check,
   CheckCircle,
   Compass,
   CookingPot,
@@ -46,9 +49,6 @@ import {
 
    DISCOVERY:
    Blush Pearl × Ruby Accents × White Glass
-   Phosphor Duotone Iconography
-   Horizontal Discovery Filter Studio
-   Scroll-Triggered Reveals
    Real Backend Data Only
 
    STYLING:
@@ -66,6 +66,11 @@ type Dish = {
   image_url: string | null;
 };
 
+type Category = {
+  category_id: number;
+  name: string;
+};
+
 type LoadState =
   | "loading"
   | "success"
@@ -78,6 +83,11 @@ type SortOption =
   | "price-asc"
   | "price-desc";
 
+type DropdownOption = {
+  value: string;
+  label: string;
+};
+
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
 
@@ -85,6 +95,13 @@ const HERO_VIDEO =
   "/videos/search/craving-cinema-smooth.mp4";
 
 const CROSSFADE_DURATION = 1.8;
+
+const SORT_OPTIONS: DropdownOption[] = [
+  { value: "name-asc", label: "Name: A–Z" },
+  { value: "name-desc", label: "Name: Z–A" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+];
 
 /* ============================================================
    UTILITIES
@@ -105,34 +122,330 @@ function formatPrice(price: number | string) {
   }).format(value);
 }
 
-function isDish(value: unknown): value is Dish {
+function parseDish(value: unknown): Dish | null {
   if (!value || typeof value !== "object") {
-    return false;
+    return null;
   }
 
   const item = value as Record<string, unknown>;
 
+  let spiceLevel: number;
+
+  if (typeof item.spice_level === "number") {
+    spiceLevel = item.spice_level;
+  } else if (typeof item.spice_level === "string") {
+    const spiceMap: Record<string, number> = {
+      none: 0,
+      mild: 2,
+      hot: 4,
+    };
+
+    const mapped =
+      spiceMap[item.spice_level.trim().toLowerCase()];
+
+    if (mapped === undefined) {
+      return null;
+    }
+
+    spiceLevel = mapped;
+  } else {
+    return null;
+  }
+
+  if (
+    typeof item.dish_id !== "number" ||
+    !Number.isFinite(item.dish_id) ||
+    typeof item.vendor_id !== "number" ||
+    !Number.isFinite(item.vendor_id) ||
+    typeof item.category_id !== "number" ||
+    !Number.isFinite(item.category_id) ||
+    typeof item.name !== "string" ||
+    item.name.trim().length === 0 ||
+    !Number.isFinite(spiceLevel) ||
+    spiceLevel < 0 ||
+    spiceLevel > 5 ||
+    (typeof item.price !== "number" &&
+      typeof item.price !== "string") ||
+    !Number.isFinite(Number(item.price)) ||
+    Number(item.price) < 0 ||
+    (item.description != null &&
+      typeof item.description !== "string") ||
+    (item.image_url != null &&
+      typeof item.image_url !== "string")
+  ) {
+    return null;
+  }
+
+  return {
+    dish_id: item.dish_id,
+    vendor_id: item.vendor_id,
+    category_id: item.category_id,
+    name: item.name,
+    price: item.price,
+    spice_level: spiceLevel,
+    description: item.description ?? null,
+    image_url: item.image_url ?? null,
+  };
+}
+
+function parseCategory(value: unknown): Category | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const item = value as Record<string, unknown>;
+
+  if (
+    typeof item.category_id !== "number" ||
+    !Number.isFinite(item.category_id) ||
+    typeof item.name !== "string" ||
+    item.name.trim().length === 0
+  ) {
+    return null;
+  }
+
+  return {
+    category_id: item.category_id,
+    name: item.name.trim(),
+  };
+}
+
+/* ============================================================
+   ACCESSIBLE CUSTOM DROPDOWN
+
+   Button + listbox:
+   - Arrow keys, Home and End move focus.
+   - Enter / Space select.
+   - Escape closes and restores trigger focus.
+   - Tab closes naturally.
+   - Outside pointer interaction closes the menu.
+============================================================ */
+
+function DiscoveryDropdown({
+  label,
+  value,
+  options,
+  disabled,
+  onChange,
+  variant,
+}: {
+  label: string;
+  value: string;
+  options: DropdownOption[];
+  disabled: boolean;
+  onChange: (value: string) => void;
+  variant: "sort" | "category";
+}) {
+  const [open, setOpen] = useState(false);
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const listId = useId();
+
+  const selectedIndex = Math.max(
+    0,
+    options.findIndex((option) => option.value === value)
+  );
+
+  const selectedLabel =
+    options[selectedIndex]?.label ?? "";
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !rootRef.current?.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener(
+      "pointerdown",
+      handlePointerDown
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handlePointerDown
+      );
+    };
+  }, [open]);
+
+  const focusOption = (index: number) => {
+    const boundedIndex = Math.max(
+      0,
+      Math.min(index, options.length - 1)
+    );
+
+    optionRefs.current[boundedIndex]?.focus();
+  };
+
+  const openMenu = (index: number) => {
+    if (disabled || options.length === 0) return;
+
+    setOpen(true);
+
+    requestAnimationFrame(() => {
+      focusOption(index);
+    });
+  };
+
+  const closeMenu = (restoreFocus: boolean) => {
+    setOpen(false);
+
+    if (restoreFocus) {
+      triggerRef.current?.focus();
+    }
+  };
+
+  const handleTriggerKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>
+  ) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      openMenu(selectedIndex);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      openMenu(selectedIndex);
+    }
+  };
+
+  const handleOptionKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        focusOption((index + 1) % options.length);
+        break;
+
+      case "ArrowUp":
+        event.preventDefault();
+        focusOption(
+          (index - 1 + options.length) % options.length
+        );
+        break;
+
+      case "Home":
+        event.preventDefault();
+        focusOption(0);
+        break;
+
+      case "End":
+        event.preventDefault();
+        focusOption(options.length - 1);
+        break;
+
+      case "Escape":
+        event.preventDefault();
+        closeMenu(true);
+        break;
+
+      case "Tab":
+        closeMenu(false);
+        break;
+    }
+  };
+
   return (
-    typeof item.dish_id === "number" &&
-    Number.isFinite(item.dish_id) &&
-    typeof item.vendor_id === "number" &&
-    Number.isFinite(item.vendor_id) &&
-    typeof item.category_id === "number" &&
-    Number.isFinite(item.category_id) &&
-    typeof item.name === "string" &&
-    item.name.trim().length > 0 &&
-    typeof item.spice_level === "number" &&
-    Number.isFinite(item.spice_level) &&
-    item.spice_level >= 0 &&
-    item.spice_level <= 5 &&
-    (typeof item.price === "number" ||
-      typeof item.price === "string") &&
-    Number.isFinite(Number(item.price)) &&
-    Number(item.price) >= 0 &&
-    (item.description == null ||
-      typeof item.description === "string") &&
-    (item.image_url == null ||
-      typeof item.image_url === "string")
+    <div
+      ref={rootRef}
+      className={`search-premium-dropdown search-premium-dropdown--${variant}${open ? " search-premium-dropdown--open" : ""
+        }`}
+    >
+      <button
+        ref={triggerRef}
+        type="button"
+        className="search-premium-dropdown-trigger"
+        aria-label={`${label}: ${selectedLabel}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        disabled={disabled}
+        onClick={() => {
+          if (open) {
+            closeMenu(false);
+          } else {
+            openMenu(selectedIndex);
+          }
+        }}
+        onKeyDown={handleTriggerKeyDown}
+      >
+        {variant === "sort" && (
+          <ArrowsDownUp
+            size={18}
+            weight="duotone"
+            aria-hidden="true"
+            className="search-premium-dropdown-icon"
+          />
+        )}
+
+        <span className="search-premium-dropdown-value">
+          {selectedLabel}
+        </span>
+
+        <CaretDown
+          size={16}
+          weight="bold"
+          aria-hidden="true"
+          className="search-premium-dropdown-caret"
+        />
+      </button>
+
+      {open && !disabled && (
+        <div
+          id={listId}
+          role="listbox"
+          aria-label={label}
+          className="search-premium-dropdown-menu"
+        >
+          {options.map((option, index) => {
+            const selected = option.value === value;
+
+            return (
+              <button
+                key={option.value}
+                ref={(element) => {
+                  optionRefs.current[index] = element;
+                }}
+                type="button"
+                role="option"
+                aria-selected={selected}
+                tabIndex={-1}
+                className={`search-premium-dropdown-option${selected
+                  ? " search-premium-dropdown-option--selected"
+                  : ""
+                  }`}
+                onKeyDown={(event) =>
+                  handleOptionKeyDown(event, index)
+                }
+                onClick={() => {
+                  onChange(option.value);
+                  closeMenu(true);
+                }}
+              >
+                <span>{option.label}</span>
+
+                {selected && (
+                  <Check
+                    size={17}
+                    weight="bold"
+                    aria-hidden="true"
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -210,15 +523,6 @@ function useDiscoveryReveal() {
 
 /* ============================================================
    APPROVED V4.5 CINEMA BACKGROUND
-
-   Dual-video crossfade:
-   1.8-second velvet dissolve on desktop.
-
-   Mobile:
-   Single looping video.
-
-   Reduced motion:
-   Static image fallback.
 ============================================================ */
 
 function CinemaBackground() {
@@ -548,6 +852,10 @@ function CinemaBackground() {
 
 export default function FoodSearchExperience() {
   const [dishes, setDishes] = useState<Dish[]>([]);
+  const [categoryNames, setCategoryNames] = useState<
+    Record<number, string>
+  >({});
+
   const [query, setQuery] = useState("");
 
   const [loadState, setLoadState] = useState<LoadState>(
@@ -558,6 +866,32 @@ export default function FoodSearchExperience() {
 
   const [selectedCategory, setSelectedCategory] =
     useState<number | null>(null);
+
+  useEffect(() => {
+    const readCategoryFromUrl = () => {
+      const value = new URLSearchParams(
+        window.location.search
+      ).get("category");
+
+      const id =
+        value && /^[1-9]\d*$/.test(value)
+          ? Number(value)
+          : null;
+
+      setSelectedCategory(
+        id !== null && Number.isSafeInteger(id)
+          ? id
+          : null
+      );
+    };
+
+    readCategoryFromUrl();
+    window.addEventListener("popstate", readCategoryFromUrl);
+
+    return () => {
+      window.removeEventListener("popstate", readCategoryFromUrl);
+    };
+  }, []);
 
   const [minimumSpice, setMinimumSpice] = useState(0);
 
@@ -600,7 +934,9 @@ export default function FoodSearchExperience() {
 
         if (controller.signal.aborted) return;
 
-        const validDishes = data.filter(isDish);
+        const validDishes = data
+          .map(parseDish)
+          .filter((dish): dish is Dish => dish !== null);
 
         if (data.length !== validDishes.length) {
           console.warn(
@@ -635,16 +971,97 @@ export default function FoodSearchExperience() {
   }, [reloadKey]);
 
   /* ==========================================================
+     FETCH CATEGORY NAMES INDEPENDENTLY
+
+     A category failure never blocks the dish gallery.
+  ========================================================== */
+
+  useEffect(() => {
+    if (!API_URL) return;
+
+    const controller = new AbortController();
+
+    async function loadCategories() {
+      try {
+        const response = await fetch(`${API_URL}/categories`, {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`API returned ${response.status}`);
+        }
+
+        const data: unknown = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Unexpected categories response");
+        }
+
+        const names: Record<number, string> = {};
+
+        data.forEach((item) => {
+          const category = parseCategory(item);
+
+          if (category) {
+            names[category.category_id] = category.name;
+          }
+        });
+
+        if (!controller.signal.aborted) {
+          setCategoryNames(names);
+        }
+      } catch (error) {
+        if (controller.signal.aborted) return;
+
+        console.warn(
+          "Unable to load category names; using category IDs.",
+          error
+        );
+
+        setCategoryNames({});
+      }
+    }
+
+    void loadCategories();
+
+    return () => controller.abort();
+  }, [reloadKey]);
+
+  /* ==========================================================
      DERIVED FILTER DATA
   ========================================================== */
 
   const categories = useMemo(() => {
     return [
-      ...new Set(
-        dishes.map((dish) => dish.category_id)
-      ),
+      ...new Set([
+        ...Object.keys(categoryNames).map(Number),
+        ...dishes.map((dish) => dish.category_id),
+      ]),
     ].sort((a, b) => a - b);
-  }, [dishes]);
+  }, [categoryNames, dishes]);
+
+  const categoryLabel = useCallback(
+    (categoryId: number) =>
+      categoryNames[categoryId] ?? `Category ${categoryId}`,
+    [categoryNames]
+  );
+
+  const categoryOptions = useMemo(() => {
+    const ids =
+      selectedCategory !== null &&
+        !categories.includes(selectedCategory)
+        ? [...categories, selectedCategory]
+        : categories;
+
+    return [
+      { value: "", label: "All categories" },
+      ...ids.map((categoryId) => ({
+        value: String(categoryId),
+        label: categoryLabel(categoryId),
+      })),
+    ];
+  }, [categories, categoryLabel, selectedCategory]);
 
   const priceLimit = useMemo(() => {
     if (!dishes.length) return 0;
@@ -667,7 +1084,7 @@ export default function FoodSearchExperience() {
     (selectedCategory !== null ? 1 : 0) +
     (minimumSpice > 0 ? 1 : 0) +
     (maximumPrice !== null &&
-    effectiveMaximumPrice < priceLimit
+      effectiveMaximumPrice < priceLimit
       ? 1
       : 0);
 
@@ -742,6 +1159,23 @@ export default function FoodSearchExperience() {
   /* ==========================================================
      ACTIONS
   ========================================================== */
+  const updateCategory = (categoryId: number | null) => {
+    setSelectedCategory(categoryId);
+
+    const url = new URL(window.location.href);
+
+    if (categoryId === null) {
+      url.searchParams.delete("category");
+    } else {
+      url.searchParams.set("category", String(categoryId));
+    }
+
+    window.history.replaceState(
+      window.history.state,
+      "",
+      url.toString()
+    );
+  };
 
   const showResults = useCallback(() => {
     const reducedMotion = window.matchMedia(
@@ -758,7 +1192,7 @@ export default function FoodSearchExperience() {
   }, []);
 
   const clearFilters = () => {
-    setSelectedCategory(null);
+    updateCategory(null);
     setMinimumSpice(0);
     setMaximumPrice(null);
     setSortBy("name-asc");
@@ -779,10 +1213,7 @@ export default function FoodSearchExperience() {
 
   return (
     <div className="craving-cinema search-v8 min-h-screen bg-[#FFF1F3]">
-
-      {/* ======================================================
-          APPROVED V4.5 CINEMATIC HERO
-      ====================================================== */}
+      {/* APPROVED V4.5 CINEMATIC HERO */}
 
       <section className="relative isolate flex min-h-[850px] items-center overflow-hidden bg-[#100B09] px-5 pb-20 pt-44 text-[#F8F0E6] sm:min-h-[880px] sm:px-10 sm:pb-24 sm:pt-48 lg:min-h-[880px] lg:px-14 lg:pb-28 lg:pt-48">
         <CinemaBackground />
@@ -939,9 +1370,7 @@ export default function FoodSearchExperience() {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-px bg-[linear-gradient(90deg,transparent,rgba(227,169,123,0.35)_40%,transparent)]" />
       </section>
 
-      {/* ======================================================
-          V8 — BLUSH DISCOVERY STUDIO
-      ====================================================== */}
+      {/* V8 — BLUSH DISCOVERY STUDIO */}
 
       <section
         ref={resultsRef}
@@ -955,10 +1384,7 @@ export default function FoodSearchExperience() {
         />
 
         <div className="search-discovery-container">
-
-          {/* ==================================================
-              EDITORIAL INTRODUCTION
-          ================================================== */}
+          {/* EDITORIAL INTRODUCTION */}
 
           <div
             className="search-discovery-introduction"
@@ -1016,9 +1442,7 @@ export default function FoodSearchExperience() {
             </div>
           </div>
 
-          {/* ==================================================
-              GALLERY TOOLBAR
-          ================================================== */}
+          {/* GALLERY TOOLBAR */}
 
           <div
             className="search-discovery-toolbar"
@@ -1049,69 +1473,24 @@ export default function FoodSearchExperience() {
               </div>
             </div>
 
-            <div className="search-sort-wrapper">
-              <ArrowsDownUp
-                size={18}
-                weight="duotone"
-                aria-hidden="true"
-                className="search-sort-icon"
-              />
-
-              <label
-                htmlFor="discovery-sort"
-                className="sr-only"
-              >
-                Sort dishes
-              </label>
-
-              <select
-                id="discovery-sort"
-                value={sortBy}
-                disabled={!hasRealDishes}
-                onChange={(event) =>
-                  setSortBy(
-                    event.target.value as SortOption
-                  )
-                }
-                className="search-sort-select"
-              >
-                <option value="name-asc">
-                  Name: A–Z
-                </option>
-
-                <option value="name-desc">
-                  Name: Z–A
-                </option>
-
-                <option value="price-asc">
-                  Price: Low to High
-                </option>
-
-                <option value="price-desc">
-                  Price: High to Low
-                </option>
-              </select>
-
-              <CaretDown
-                size={15}
-                weight="bold"
-                aria-hidden="true"
-                className="search-sort-caret"
-              />
-            </div>
+            <DiscoveryDropdown
+              label="Sort dishes"
+              value={sortBy}
+              options={SORT_OPTIONS}
+              disabled={!hasRealDishes}
+              variant="sort"
+              onChange={(value) =>
+                setSortBy(value as SortOption)
+              }
+            />
           </div>
 
-          {/* ==================================================
-              HORIZONTAL FILTER STUDIO
-          ================================================== */}
+          {/* HORIZONTAL FILTER STUDIO */}
 
           <div
             className="search-filter-studio"
             data-search-reveal
           >
-
-            {/* HEADER */}
-
             <div className="search-filter-header">
               <div className="search-filter-heading-group">
                 <div className="search-filter-header-icon">
@@ -1186,17 +1565,13 @@ export default function FoodSearchExperience() {
               </div>
             </div>
 
-            {/* FILTER GRID */}
-
             <div
               id="search-v8-filter-content"
-              className={`search-filter-grid ${
-                mobileFiltersOpen
-                  ? "search-filter-grid-open"
-                  : ""
-              }`}
+              className={`search-filter-grid ${mobileFiltersOpen
+                ? "search-filter-grid-open"
+                : ""
+                }`}
             >
-
               {/* CATEGORY */}
 
               <div className="search-filter-column">
@@ -1210,56 +1585,26 @@ export default function FoodSearchExperience() {
                   />
                 </div>
 
-                <div className="search-category-wrapper">
-                  <label
-                    htmlFor="search-v8-category"
-                    className="sr-only"
-                  >
-                    Filter by food category
-                  </label>
-
-                  <select
-                    id="search-v8-category"
-                    value={
-                      selectedCategory === null
-                        ? ""
-                        : String(selectedCategory)
-                    }
-                    disabled={!hasRealDishes}
-                    onChange={(event) =>
-                      setSelectedCategory(
-                        event.target.value === ""
-                          ? null
-                          : Number(event.target.value)
-                      )
-                    }
-                    className="search-category-select"
-                  >
-                    <option value="">
-                      All categories
-                    </option>
-
-                    {categories.map((categoryId) => (
-                      <option
-                        key={categoryId}
-                        value={categoryId}
-                      >
-                        Category {categoryId}
-                      </option>
-                    ))}
-                  </select>
-
-                  <CaretDown
-                    size={16}
-                    weight="bold"
-                    aria-hidden="true"
-                    className="search-category-caret"
-                  />
-                </div>
+                <DiscoveryDropdown
+                  label="Filter by food category"
+                  value={
+                    selectedCategory === null
+                      ? ""
+                      : String(selectedCategory)
+                  }
+                  options={categoryOptions}
+                  disabled={!hasRealDishes}
+                  variant="category"
+                  onChange={(value) =>
+                    updateCategory(
+                      value === "" ? null : Number(value)
+                    )
+                  }
+                />
 
                 <p className="search-filter-helper">
                   {hasRealDishes
-                    ? "Choose from available dish categories."
+                    ? "Choose a food category."
                     : "Categories appear when dishes load."}
                 </p>
               </div>
@@ -1299,11 +1644,10 @@ export default function FoodSearchExperience() {
                         onClick={() =>
                           setMinimumSpice(level)
                         }
-                        className={`search-spice-choice ${
-                          minimumSpice === level
-                            ? "search-spice-selected"
-                            : ""
-                        }`}
+                        className={`search-spice-choice ${minimumSpice === level
+                          ? "search-spice-selected"
+                          : ""
+                          }`}
                       >
                         {level}
                       </button>
@@ -1386,8 +1730,6 @@ export default function FoodSearchExperience() {
               </div>
             </div>
 
-            {/* CONNECTION NOTICE */}
-
             {!hasRealDishes && (
               <div className="search-filter-preview-notice">
                 <PlugsConnected
@@ -1405,9 +1747,7 @@ export default function FoodSearchExperience() {
             )}
           </div>
 
-          {/* ==================================================
-              ACTIVE FILTER CHIPS
-          ================================================== */}
+          {/* ACTIVE FILTER CHIPS */}
 
           {hasRealDishes &&
             (activeFilterCount > 0 ||
@@ -1422,9 +1762,9 @@ export default function FoodSearchExperience() {
 
                 {selectedCategory !== null && (
                   <FilterChip
-                    label={`Category ${selectedCategory}`}
+                    label={categoryLabel(selectedCategory)}
                     onRemove={() =>
-                      setSelectedCategory(null)
+                      updateCategory(null)
                     }
                   />
                 )}
@@ -1440,7 +1780,7 @@ export default function FoodSearchExperience() {
 
                 {maximumPrice !== null &&
                   effectiveMaximumPrice <
-                    priceLimit && (
+                  priceLimit && (
                     <FilterChip
                       label={`Up to ${formatPrice(
                         effectiveMaximumPrice
@@ -1461,14 +1801,9 @@ export default function FoodSearchExperience() {
               </div>
             )}
 
-          {/* ==================================================
-              RESULTS STAGE
-          ================================================== */}
+          {/* RESULTS STAGE */}
 
           <div className="search-results-stage">
-
-            {/* LOADING */}
-
             {loadState === "loading" && (
               <div
                 role="status"
@@ -1497,8 +1832,6 @@ export default function FoodSearchExperience() {
               </div>
             )}
 
-            {/* BACKEND UNCONFIGURED */}
-
             {loadState === "unconfigured" && (
               <StatusPanel
                 icon="connection"
@@ -1508,8 +1841,6 @@ export default function FoodSearchExperience() {
                 note="Frontend ready · Data connection pending"
               />
             )}
-
-            {/* CONNECTION ERROR */}
 
             {loadState === "error" && (
               <StatusPanel
@@ -1534,8 +1865,6 @@ export default function FoodSearchExperience() {
                 }
               />
             )}
-
-            {/* EMPTY DATABASE OR NO MATCH */}
 
             {loadState === "success" &&
               filteredDishes.length === 0 && (
@@ -1576,8 +1905,6 @@ export default function FoodSearchExperience() {
                 />
               )}
 
-            {/* REAL DISH GALLERY */}
-
             {loadState === "success" &&
               filteredDishes.length > 0 && (
                 <div
@@ -1589,15 +1916,16 @@ export default function FoodSearchExperience() {
                       key={dish.dish_id}
                       dish={dish}
                       index={index}
+                      categoryName={categoryLabel(
+                        dish.category_id
+                      )}
                     />
                   ))}
                 </div>
               )}
           </div>
 
-          {/* ==================================================
-              SECTION CLOSING
-          ================================================== */}
+          {/* SECTION CLOSING */}
 
           <div className="search-section-closing">
             <div className="search-closing-identity">
@@ -1659,9 +1987,11 @@ function FilterChip({
 function DishCard({
   dish,
   index,
+  categoryName,
 }: {
   dish: Dish;
   index: number;
+  categoryName: string;
 }) {
   const spiceLevel = Math.max(
     0,
@@ -1670,8 +2000,8 @@ function DishCard({
 
   const imageSrc =
     dish.image_url &&
-    (dish.image_url.startsWith("/") ||
-      /^https?:\/\//i.test(dish.image_url))
+      (dish.image_url.startsWith("/") ||
+        /^https?:\/\//i.test(dish.image_url))
       ? dish.image_url
       : null;
 
@@ -1681,7 +2011,12 @@ function DishCard({
       style={{
         animationDelay: `${Math.min(index, 8) * 75}ms`,
       }}
-    >
+        >
+      <Link
+        href={`/dishes/${dish.dish_id}`}
+        className="search-dish-link"
+        aria-label={`View details for ${dish.name}`}
+      >
       <div className="search-dish-image">
         {imageSrc ? (
           <Image
@@ -1715,7 +2050,7 @@ function DishCard({
             aria-hidden="true"
           />
 
-          Category {dish.category_id}
+          {categoryName}
         </div>
       </div>
 
@@ -1762,17 +2097,17 @@ function DishCard({
               (_, dotIndex) => (
                 <span
                   key={dotIndex}
-                  className={`search-spice-dot ${
-                    dotIndex < spiceLevel
-                      ? "search-spice-dot-active"
-                      : ""
-                  }`}
+                  className={`search-spice-dot ${dotIndex < spiceLevel
+                    ? "search-spice-dot-active"
+                    : ""
+                    }`}
                 />
               )
             )}
           </div>
         </div>
-      </div>
+            </div>
+      </Link>
     </article>
   );
 }

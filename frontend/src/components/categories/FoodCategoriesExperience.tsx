@@ -2,14 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   ArrowClockwise,
   ArrowRight,
   ArrowUpRight,
   BowlFood,
-  Check,
   Compass,
   ForkKnife,
   MagnifyingGlass,
@@ -25,9 +30,14 @@ type Category = {
   name: string;
 };
 
-type LoadStatus = "loading" | "success" | "error" | "unconfigured";
+type LoadStatus =
+  | "loading"
+  | "success"
+  | "error"
+  | "unconfigured";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
 
 const FOOD_IMAGES = {
   momos: "/images/discovery/spicy-momos.png",
@@ -37,8 +47,92 @@ const FOOD_IMAGES = {
   jalebi: "/images/discovery/rabri-malai-jalebi.png",
 };
 
+/* ============================================================
+   CATEGORIES V1.7 — REVEAL MOTION
+   Refresh entrances + reliable scroll reveals
+   ============================================================ */
+
+function useCategoriesMotion() {
+  const pageRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const root = pageRef.current;
+
+    if (!root) return;
+
+    const elements = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        "[data-ci-reveal]"
+      )
+    );
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    );
+
+    if (
+      reducedMotion.matches ||
+      !("IntersectionObserver" in window)
+    ) {
+      elements.forEach((element) => {
+        element.classList.add("ci-motion-visible");
+      });
+
+      return;
+    }
+
+    /*
+     * First mark elements already visible in the viewport.
+     * This allows refresh animations to run immediately.
+     *
+     * Elements farther down remain ready for scroll reveal.
+     */
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const element = entry.target as HTMLElement;
+
+          element.classList.add("ci-motion-visible");
+
+          observer.unobserve(element);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -7% 0px",
+        threshold: 0.08,
+      }
+    );
+
+    root.classList.add("ci-motion-active");
+
+    elements.forEach((element) => {
+      observer.observe(element);
+    });
+
+    return () => {
+      observer.disconnect();
+      root.classList.remove("ci-motion-active");
+    };
+  }, []);
+
+  return pageRef;
+}
+
+/* ============================================================
+   DATA VALIDATION
+   ============================================================ */
+
 function isCategory(value: unknown): value is Category {
-  if (typeof value !== "object" || value === null) return false;
+  if (
+    typeof value !== "object" ||
+    value === null
+  ) {
+    return false;
+  }
 
   const record = value as Record<string, unknown>;
 
@@ -48,6 +142,10 @@ function isCategory(value: unknown): value is Category {
     typeof record.name === "string"
   );
 }
+
+/* ============================================================
+   DIRECTORY MESSAGE
+   ============================================================ */
 
 function DirectoryMessage({
   eyebrow,
@@ -68,7 +166,9 @@ function DirectoryMessage({
         <Compass size={25} weight="duotone" />
       </span>
 
-      <span className="ci-message-eyebrow">{eyebrow}</span>
+      <span className="ci-message-eyebrow">
+        {eyebrow}
+      </span>
 
       <h3>{title}</h3>
 
@@ -81,22 +181,32 @@ function DirectoryMessage({
           onClick={onAction}
         >
           {actionLabel}
-          <ArrowClockwise size={17} weight="bold" />
+
+          <ArrowClockwise
+            size={17}
+            weight="bold"
+          />
         </button>
       )}
     </div>
   );
 }
 
+/* ============================================================
+   SECTION 01 — THE CRAVING DIRECTORY
+   ============================================================ */
+
 function CravingDirectory() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<
+    Category[]
+  >([]);
 
   const [status, setStatus] = useState<LoadStatus>(
     API_URL ? "loading" : "unconfigured"
   );
 
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
@@ -108,10 +218,13 @@ function CravingDirectory() {
       setStatus("loading");
 
       try {
-        const response = await fetch(`${API_URL}/categories`, {
-          signal: controller.signal,
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `${API_URL}/categories`,
+          {
+            signal: controller.signal,
+            cache: "no-store",
+          }
+        );
 
         if (!response.ok) {
           throw new Error(
@@ -121,8 +234,13 @@ function CravingDirectory() {
 
         const data: unknown = await response.json();
 
-        if (!Array.isArray(data) || !data.every(isCategory)) {
-          throw new Error("Unexpected categories response");
+        if (
+          !Array.isArray(data) ||
+          !data.every(isCategory)
+        ) {
+          throw new Error(
+            "Unexpected categories response"
+          );
         }
 
         const sorted = [...data].sort((a, b) =>
@@ -135,7 +253,11 @@ function CravingDirectory() {
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error("Unable to load categories:", error);
+          console.error(
+            "Unable to load categories:",
+            error
+          );
+
           setCategories([]);
           setStatus("error");
         }
@@ -156,21 +278,16 @@ function CravingDirectory() {
 
     return search
       ? categories.filter((category) =>
-          category.name.toLowerCase().includes(search)
+          category.name
+            .toLowerCase()
+            .includes(search)
         )
       : categories;
   }, [categories, query]);
 
-  const selectedCategory = useMemo(
-    () =>
-      categories.find(
-        (category) => category.category_id === selectedId
-      ) ?? null,
-    [categories, selectedId]
-  );
-
   const canSearch =
-    currentStatus === "success" && categories.length > 0;
+    currentStatus === "success" &&
+    categories.length > 0;
 
   return (
     <section
@@ -179,14 +296,24 @@ function CravingDirectory() {
       aria-labelledby="ci-page-title"
     >
       <div className="ci-container">
-        <header className="ci-page-intro">
+        {/* PAGE INTRO */}
+
+        <header
+          className="ci-page-intro ci-reveal ci-reveal-intro"
+          data-ci-reveal
+        >
           <div className="ci-eyebrow">
             <span className="ci-eyebrow-icon">
-              <ForkKnife size={16} weight="bold" />
+              <ForkKnife
+                size={16}
+                weight="bold"
+              />
             </span>
 
             <span>THE CRAVING INDEX</span>
+
             <span className="ci-eyebrow-line" />
+
             <span>EXPLORE BY TASTE</span>
           </div>
 
@@ -198,19 +325,26 @@ function CravingDirectory() {
             </h1>
 
             <p>
-              Sometimes you know exactly what you want. Sometimes all
-              you need is a little inspiration. Start with a craving
-              and see where it takes you.
+              Sometimes you know exactly what you
+              want. Sometimes all you need is a
+              little inspiration. Start with a
+              craving and see where it takes you.
             </p>
           </div>
         </header>
 
+        {/* DIRECTORY + FOOD EDITORIAL */}
+
         <div className="ci-discovery-layout">
-          <div className="ci-directory">
+          <div
+            className="ci-directory ci-reveal ci-reveal-directory"
+            data-ci-reveal
+          >
             <div className="ci-directory-header">
               <div>
                 <p className="ci-small-label">
                   <span className="ci-label-dot" />
+
                   YOUR FOOD DIRECTORY
                 </p>
 
@@ -222,13 +356,17 @@ function CravingDirectory() {
               </div>
 
               <div className="ci-directory-icon">
-                <Compass size={27} weight="duotone" />
+                <Compass
+                  size={27}
+                  weight="duotone"
+                />
               </div>
             </div>
 
             <p className="ci-directory-description">
-              Explore the food categories in our collection.
-              Pick what sounds good to you.
+              Explore the food categories in our
+              collection. Pick what sounds good
+              to you.
             </p>
 
             {canSearch && (
@@ -248,7 +386,9 @@ function CravingDirectory() {
                     id="ci-category-search"
                     type="search"
                     value={query}
-                    onChange={(event) => setQuery(event.target.value)}
+                    onChange={(event) =>
+                      setQuery(event.target.value)
+                    }
                     placeholder="What sounds good?"
                     autoComplete="off"
                   />
@@ -259,12 +399,17 @@ function CravingDirectory() {
                       onClick={() => setQuery("")}
                       aria-label="Clear category search"
                     >
-                      <X size={16} weight="bold" />
+                      <X
+                        size={16}
+                        weight="bold"
+                      />
                     </button>
                   )}
                 </div>
               </div>
             )}
+
+            {/* LOADING */}
 
             {currentStatus === "loading" && (
               <div
@@ -272,17 +417,26 @@ function CravingDirectory() {
                 aria-label="Loading food categories"
                 aria-busy="true"
               >
-                {Array.from({ length: 5 }, (_, index) => (
-                  <div className="ci-skeleton-row" key={index}>
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                ))}
+                {Array.from(
+                  { length: 5 },
+                  (_, index) => (
+                    <div
+                      className="ci-skeleton-row"
+                      key={index}
+                    >
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                  )
+                )}
               </div>
             )}
 
-            {currentStatus === "unconfigured" && (
+            {/* API UNCONFIGURED */}
+
+            {currentStatus ===
+              "unconfigured" && (
               <DirectoryMessage
                 eyebrow="DISCOVERY COMING SOON"
                 title="The collection is getting ready."
@@ -290,15 +444,23 @@ function CravingDirectory() {
               />
             )}
 
+            {/* API ERROR */}
+
             {currentStatus === "error" && (
               <DirectoryMessage
                 eyebrow="CONNECTION INTERRUPTED"
                 title="We lost the food trail."
                 description="We couldn't load the categories right now. Give it another try."
                 actionLabel="TRY AGAIN"
-                onAction={() => setRetryCount((count) => count + 1)}
+                onAction={() =>
+                  setRetryCount(
+                    (count) => count + 1
+                  )
+                }
               />
             )}
+
+            {/* EMPTY DATABASE */}
 
             {currentStatus === "success" &&
               categories.length === 0 && (
@@ -309,6 +471,8 @@ function CravingDirectory() {
                 />
               )}
 
+            {/* NO SEARCH MATCHES */}
+
             {currentStatus === "success" &&
               categories.length > 0 &&
               filteredCategories.length === 0 && (
@@ -317,87 +481,62 @@ function CravingDirectory() {
                   title="Try another craving."
                   description="No category matches your search. Try a different word."
                   actionLabel="CLEAR SEARCH"
-                  onAction={() => setQuery("")}
+                  onAction={() =>
+                    setQuery("")
+                  }
                 />
               )}
 
-            {currentStatus === "success" &&
+            {/* LIVE CATEGORY RESULTS */}
+
+                        {currentStatus === "success" &&
               filteredCategories.length > 0 && (
                 <div
                   className="ci-category-list"
                   aria-label="Food categories"
                 >
-                  {filteredCategories.map((category, index) => {
-                    const selected =
-                      selectedId === category.category_id;
+                  {filteredCategories.map((category, index) => (
+                    <Link
+                      key={category.category_id}
+                      href={`/search?category=${category.category_id}#food-search-results`}
+                      className="ci-category-row"
+                    >
+                      <span className="ci-category-number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
 
-                    return (
-                      <button
-                        type="button"
-                        key={category.category_id}
-                        className={`ci-category-row ${
-                          selected ? "ci-category-row-selected" : ""
-                        }`}
-                        onClick={() =>
-                          setSelectedId(
-                            selected ? null : category.category_id
-                          )
-                        }
-                        aria-pressed={selected}
-                      >
-                        <span className="ci-category-number">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
+                      <span className="ci-category-name">
+                        {category.name}
+                      </span>
 
-                        <span className="ci-category-name">
-                          {category.name}
-                        </span>
-
-                        <span className="ci-category-arrow">
-                          {selected ? (
-                            <Check size={18} weight="bold" />
-                          ) : (
-                            <ArrowUpRight size={18} weight="bold" />
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
+                      <span className="ci-category-arrow">
+                        <ArrowUpRight
+                          size={18}
+                          weight="bold"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </Link>
+                  ))}
                 </div>
               )}
 
-            <div className="ci-directory-footer">
-              {selectedCategory ? (
-                <div
-                  className="ci-selected-category"
-                  aria-live="polite"
-                >
-                  <span className="ci-selected-check">
-                    <Check size={14} weight="bold" />
-                  </span>
+            {/* DIRECTORY FOOTER */}
 
-                  <span>
-                    Selected: <strong>{selectedCategory.name}</strong>
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(null)}
-                    aria-label="Clear selected category"
-                  >
-                    <X size={15} weight="bold" />
-                  </button>
-                </div>
-              ) : (
-                <p>
-                  <span />
-                  A GOOD CRAVING IS A GOOD PLACE TO START.
-                </p>
-              )}
+                        <div className="ci-directory-footer">
+              <p>
+                <span />
+                A GOOD CRAVING IS A GOOD PLACE TO START.
+              </p>
             </div>
           </div>
 
-          <div className="ci-food-editorial">
+          {/* FOOD EDITORIAL */}
+
+          <div
+            className="ci-food-editorial ci-reveal ci-reveal-editorial"
+            data-ci-reveal
+          >
             <div className="ci-editorial-top">
               <span>THE FOOD EDIT</span>
               <span>01 / 02</span>
@@ -456,23 +595,37 @@ function CravingDirectory() {
               </div>
 
               <p>
-                From comfort-food classics to bold street-side
-                favorites, there&apos;s always another flavor
+                From comfort-food classics to
+                bold street-side favorites,
+                there&apos;s always another flavor
                 worth discovering.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="ci-section-end">
+        {/* SECTION END */}
+
+        <div
+          className="ci-section-end ci-reveal ci-reveal-section-end"
+          data-ci-reveal
+        >
           <span>FOLLOW YOUR APPETITE</span>
+
           <span className="ci-section-end-line" />
-          <span>THERE&apos;S MORE TO TASTE</span>
+
+          <span>
+            THERE&apos;S MORE TO TASTE
+          </span>
         </div>
       </div>
     </section>
   );
 }
+
+/* ============================================================
+   SECTION 02 — CRAVING FINALE
+   ============================================================ */
 
 function CravingFinale() {
   return (
@@ -481,16 +634,28 @@ function CravingFinale() {
       aria-labelledby="ci-finale-title"
     >
       <div className="ci-container ci-finale-layout">
+        {/* FINALE COPY */}
+
         <div className="ci-finale-copy">
-          <div className="ci-finale-eyebrow">
+          <div
+            className="ci-finale-eyebrow ci-reveal ci-reveal-finale-eyebrow"
+            data-ci-reveal
+          >
             <span>
-              <MapPin size={17} weight="fill" />
+              <MapPin
+                size={17}
+                weight="fill"
+              />
             </span>
 
             YOUR NEXT FOOD FIND STARTS HERE
           </div>
 
-          <h2 id="ci-finale-title">
+          <h2
+            id="ci-finale-title"
+            className="ci-reveal ci-reveal-finale-title"
+            data-ci-reveal
+          >
             GOOD FOOD
             <br />
             IS CLOSER
@@ -498,29 +663,60 @@ function CravingFinale() {
             <span>THAN YOU THINK.</span>
           </h2>
 
-          <p>
-            That little street-side favorite. The dish everyone
-            keeps talking about. The place you haven&apos;t discovered
-            yet. Your next great food find is waiting.
+          <p
+            className="ci-reveal ci-reveal-finale-description"
+            data-ci-reveal
+          >
+            That little street-side favorite.
+            The dish everyone keeps talking
+            about. The place you haven&apos;t
+            discovered yet. Your next great
+            food find is waiting.
           </p>
 
-          <Link href="/search" className="ci-finale-button">
-            <ForkKnife size={20} weight="bold" />
+          <div
+            className="ci-reveal ci-reveal-finale-action"
+            data-ci-reveal
+          >
+            <Link
+              href="/search"
+              className="ci-finale-button"
+            >
+              <ForkKnife
+                size={20}
+                weight="bold"
+              />
 
-            <span>EXPLORE ALL DISHES</span>
+              <span>
+                EXPLORE ALL DISHES
+              </span>
 
-            <span className="ci-finale-button-arrow">
-              <ArrowRight size={21} weight="bold" />
-            </span>
-          </Link>
+              <span className="ci-finale-button-arrow">
+                <ArrowRight
+                  size={21}
+                  weight="bold"
+                />
+              </span>
+            </Link>
+          </div>
 
-          <div className="ci-finale-caption">
+          <div
+            className="ci-finale-caption ci-reveal ci-reveal-finale-caption"
+            data-ci-reveal
+          >
             <span />
-            DISCOVER DISHES. FIND YOUR FAVORITES.
+
+            DISCOVER DISHES. FIND YOUR
+            FAVORITES.
           </div>
         </div>
 
-        <div className="ci-gallery">
+        {/* FOOD GALLERY */}
+
+        <div
+          className="ci-gallery ci-gallery-motion"
+          data-ci-gallery
+        >
           <div className="ci-gallery-backdrop" />
 
           <div className="ci-gallery-food ci-gallery-momos">
@@ -569,11 +765,15 @@ function CravingFinale() {
             <strong>GOOD</strong>
             <strong>STUFF.</strong>
 
-            <ArrowUpRight size={19} weight="bold" />
+            <ArrowUpRight
+              size={19}
+              weight="bold"
+            />
           </div>
 
           <div className="ci-gallery-label">
             <span />
+
             FOOD WORTH FINDING
           </div>
         </div>
@@ -582,14 +782,25 @@ function CravingFinale() {
   );
 }
 
+/* ============================================================
+   MAIN CATEGORIES EXPERIENCE
+   ============================================================ */
+
 export default function FoodCategoriesExperience() {
+  const pageRef = useCategoriesMotion();
+
   return (
-    <main id="top" className="craving-index-v1 ci-premium-v11">
+    <main
+      ref={pageRef}
+      id="top"
+      className="craving-index-v1 ci-premium-v11 ci-motion-v17"
+    >
       <div className="sticky top-0 z-50 -mb-[78px] sm:-mb-[86px] lg:-mb-[90px]">
         <DiscoveryNavbar />
       </div>
 
       <CravingDirectory />
+
       <CravingFinale />
 
       <DiscoveryFooter />
