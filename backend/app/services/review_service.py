@@ -31,16 +31,19 @@ async def get_review_by_id(pool, review_id: int):
     return dict(row) if row else None
 
 
+
 async def get_reviews_by_dish_id(pool, dish_id: int):
     query = """
         SELECT review_id, dish_id, user_id, rating,
                comment, created_at, is_flagged
         FROM user_reviews
         WHERE dish_id = $1
+          AND is_flagged = FALSE
         ORDER BY created_at DESC
     """
     rows = await pool.fetch(query, dish_id)
     return [dict(row) for row in rows]
+
 
 
 async def get_all_reviews(pool):
