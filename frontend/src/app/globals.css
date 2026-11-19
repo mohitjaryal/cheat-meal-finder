@@ -13781,3 +13781,1184 @@ canvas {
     text-align: center;
   }
 }
+/* Vendor listings — scoped to /vendors */
+.vendor-listing {
+  --vl-ink: #17213b;
+  --vl-muted: #58647a;
+  --vl-accent: #f05b32;
+  --vl-border: rgba(35, 47, 71, 0.12);
+  color: var(--vl-ink);
+  background: #f7f5ef;
+  min-height: 100vh;
+}
+
+.vendor-listing .vl-shell {
+  width: min(1320px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.vendor-listing .vl-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 28px 0;
+  color: #626d80;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vendor-listing .vl-breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.vendor-listing .vl-breadcrumb a:hover {
+  color: var(--vl-accent);
+}
+
+.vendor-listing .vl-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 32px;
+  overflow: hidden;
+  min-height: 440px;
+  padding: clamp(30px, 5vw, 72px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 211, 165, 0.7), transparent 35%),
+    linear-gradient(125deg, #fffdf8 5%, #fff3e9 58%, #f4ded0);
+  box-shadow: 0 24px 70px rgba(68, 47, 35, 0.08);
+}
+
+.vendor-listing .vl-hero-copy {
+  position: relative;
+  z-index: 1;
+  animation: vl-rise 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vendor-listing .vl-kicker,
+.vendor-listing .vl-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 16px;
+  color: #b44324;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.vendor-listing .vl-kicker > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vl-accent);
+  box-shadow: 0 0 0 5px rgba(240, 91, 50, 0.12);
+}
+
+.vendor-listing .vl-hero h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 5.7vw, 5.4rem);
+  line-height: 1.03;
+  letter-spacing: -0.055em;
+}
+
+.vendor-listing .vl-hero h1 em {
+  color: #c74728;
+  font-style: normal;
+}
+
+.vendor-listing .vl-hero-intro {
+  max-width: 530px;
+  margin: 22px 0 28px;
+  color: #536075;
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.75;
+}
+
+.vendor-listing .vl-primary-button,
+.vendor-listing .vl-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 13px 20px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+.vendor-listing .vl-primary-button {
+  color: #fff;
+  background: #26334b;
+  box-shadow: 0 10px 24px rgba(38, 51, 75, 0.2);
+}
+
+.vendor-listing .vl-primary-button:hover {
+  transform: translateY(-2px);
+  background: #35445f;
+  box-shadow: 0 14px 28px rgba(38, 51, 75, 0.24);
+}
+
+.vendor-listing .vl-secondary-button {
+  color: var(--vl-ink);
+  border-color: var(--vl-border);
+  background: #fff;
+}
+
+.vendor-listing .vl-hero-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  animation: vl-rise 950ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.vendor-listing .vl-art-orbit {
+  position: absolute;
+  aspect-ratio: 1;
+  border: 1px solid rgba(194, 95, 59, 0.23);
+  border-radius: 50%;
+}
+
+.vendor-listing .vl-art-orbit-one {
+  width: min(85%, 320px);
+}
+
+.vendor-listing .vl-art-orbit-two {
+  width: min(65%, 240px);
+  border-color: rgba(194, 95, 59, 0.35);
+}
+
+.vendor-listing .vl-art-center {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 140px;
+  aspect-ratio: 1;
+  color: #b94525;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 38px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 220, 195, 0.8));
+  box-shadow: 0 20px 50px rgba(159, 80, 47, 0.17), inset 0 1px 0 #fff;
+  transform: rotate(-5deg);
+}
+
+.vendor-listing .vl-art-label {
+  position: absolute;
+  bottom: 4px;
+  color: #8c533e;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.vendor-listing .vl-discover {
+  padding: clamp(60px, 8vw, 105px) 0;
+  scroll-margin-top: 100px;
+}
+
+.vendor-listing .vl-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.vendor-listing .vl-section-heading h2,
+.vendor-listing .vl-outro h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3.4vw, 3.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+
+.vendor-listing .vl-section-heading > p,
+.vendor-listing .vl-outro > div > p:last-child {
+  max-width: 340px;
+  margin: 0;
+  color: var(--vl-muted);
+  line-height: 1.7;
+}
+
+.vendor-listing .vl-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 12px 35px rgba(37, 45, 60, 0.05);
+}
+
+.vendor-listing .vl-field {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.vendor-listing .vl-search-field {
+  flex: 2 1 300px;
+}
+
+.vendor-listing .vl-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #39465b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.vendor-listing .vl-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  color: #6b7688;
+  border: 1px solid #dce1e6;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.vendor-listing .vl-input-wrap:focus-within {
+  outline: 2px solid #b74425;
+  outline-offset: 2px;
+}
+
+.vendor-listing .vl-input-wrap input,
+.vendor-listing .vl-field select {
+  width: 100%;
+  min-height: 48px;
+  color: var(--vl-ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+.vendor-listing .vl-input-wrap input {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.vendor-listing .vl-field select {
+  padding: 0 12px;
+  border: 1px solid #dce1e6;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.vendor-listing .vl-clear-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 12px;
+  color: #a63c20;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.vendor-listing .vl-results {
+  margin: 28px 0 18px;
+  color: #596579;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.vendor-listing .vl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.vendor-listing .vl-card {
+  min-width: 0;
+}
+
+.vendor-listing .vl-card-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 290px;
+  overflow: hidden;
+  padding: 24px;
+  color: inherit;
+  border: 1px solid rgba(40, 52, 73, 0.1);
+  border-radius: 23px;
+  background: linear-gradient(145deg, #fff 5%, #fffbf7 100%);
+  box-shadow: 0 12px 32px rgba(44, 50, 60, 0.06);
+  text-decoration: none;
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+}
+
+.vendor-listing .vl-card-link:hover {
+  transform: translateY(-5px);
+  border-color: rgba(211, 94, 54, 0.3);
+  box-shadow: 0 20px 42px rgba(62, 46, 37, 0.12);
+}
+
+.vendor-listing .vl-card-top,
+.vendor-listing .vl-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.vendor-listing .vl-card-icon,
+.vendor-listing .vl-state-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  color: #bd4828;
+  border: 1px solid #f4d8c8;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff8f1, #fbe9dc);
+}
+
+.vendor-listing .vl-card-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: #526078;
+  border: 1px solid #e4e8ed;
+  border-radius: 50%;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.vendor-listing .vl-card-link:hover .vl-card-arrow {
+  color: #fff;
+  background: #26334b;
+}
+
+.vendor-listing .vl-card-content {
+  margin: 23px 0 18px;
+}
+
+.vendor-listing .vl-card-type {
+  margin: 0 0 8px;
+  color: #a84024;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.vendor-listing .vl-card-content h3 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.vendor-listing .vl-card-details {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.vendor-listing .vl-card-details p {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  color: #596579;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.vendor-listing .vl-card-details svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #b64c2c;
+}
+
+.vendor-listing .vl-card-bottom {
+  margin-top: auto;
+  padding-top: 16px;
+  color: #293850;
+  border-top: 1px solid #edf0f2;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.vendor-listing .vl-state {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 55px 24px;
+  border: 1px solid var(--vl-border);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75);
+  text-align: center;
+}
+
+.vendor-listing .vl-state h3 {
+  margin: 4px 0 0;
+  font-size: 21px;
+}
+
+.vendor-listing .vl-state p {
+  margin: 0;
+  color: var(--vl-muted);
+  line-height: 1.6;
+}
+
+.vendor-listing .vl-state button {
+  margin-top: 8px;
+}
+
+.vendor-listing .vl-outro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 80px;
+  padding: clamp(28px, 4vw, 48px);
+  border: 1px solid #eadacf;
+  border-radius: 28px;
+  background: linear-gradient(120deg, #fffaf4, #f9e9dc);
+}
+
+.vendor-listing .vl-outro > div > p:last-child {
+  margin-top: 12px;
+}
+
+.vendor-listing :is(a, button, select):focus-visible {
+  outline: 3px solid #b74425;
+  outline-offset: 4px;
+}
+
+@keyframes vl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .vendor-listing .vl-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vendor-listing .vl-hero {
+    grid-template-columns: 1fr 0.7fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .vendor-listing .vl-shell {
+    width: calc(100% - 32px);
+  }
+
+  .vendor-listing .vl-breadcrumb {
+    padding: 22px 0;
+  }
+
+  .vendor-listing .vl-hero {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 30px 24px;
+    border-radius: 25px;
+  }
+
+  .vendor-listing .vl-hero h1 {
+    font-size: clamp(2.5rem, 10vw, 3.4rem);
+  }
+
+  .vendor-listing .vl-hero-art {
+    min-height: 270px;
+  }
+
+  .vendor-listing .vl-art-orbit-one {
+    width: min(75%, 250px);
+  }
+
+  .vendor-listing .vl-art-orbit-two {
+    width: min(55%, 185px);
+  }
+
+  .vendor-listing .vl-art-center {
+    width: 115px;
+    border-radius: 32px;
+  }
+
+  .vendor-listing .vl-section-heading,
+  .vendor-listing .vl-outro {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vendor-listing .vl-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-listing .vl-filters {
+    padding: 16px;
+  }
+
+  .vendor-listing .vl-field {
+    flex-basis: 100%;
+  }
+
+  .vendor-listing .vl-outro {
+    margin-bottom: 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vendor-listing .vl-hero-copy,
+  .vendor-listing .vl-hero-art {
+    animation: none;
+  }
+
+  .vendor-listing :is(.vl-primary-button, .vl-secondary-button, .vl-card-link, .vl-card-arrow) {
+    transition: none;
+  }
+
+  .vendor-listing :is(.vl-primary-button, .vl-card-link):hover {
+    transform: none;
+  }
+}
+/* Vendor listings — metallic glass polish */
+.vendor-listing {
+  background:
+    radial-gradient(ellipse at 88% 8%, rgba(211, 148, 98, 0.14), transparent 29%),
+    radial-gradient(ellipse at 10% 52%, rgba(184, 193, 199, 0.17), transparent 32%),
+    #f4f2ed;
+}
+
+.vendor-listing .vl-hero {
+  isolation: isolate;
+  border-color: rgba(255, 255, 255, 0.7);
+  background:
+    radial-gradient(circle at 78% 30%, rgba(199, 120, 72, 0.3), transparent 33%),
+    linear-gradient(120deg, #faf8f2 0%, #f3e9dc 55%, #dfc7b6 100%);
+  box-shadow:
+    0 30px 80px rgba(50, 37, 32, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.vendor-listing .vl-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(125deg, transparent 35%, rgba(255, 255, 255, 0.35) 49%, transparent 62%);
+}
+
+.vendor-listing .vl-hero h1 em {
+  color: #a63b20;
+}
+
+.vendor-listing .vl-primary-button {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(145deg, #33383d, #15191c);
+  box-shadow: 0 12px 26px rgba(23, 26, 28, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.vendor-listing .vl-primary-button:hover {
+  background: linear-gradient(145deg, #494441, #202327);
+}
+
+.vendor-listing .vl-hero-art {
+  min-height: 360px;
+  perspective: 900px;
+}
+
+.vendor-listing .vl-art-glow {
+  position: absolute;
+  width: min(90%, 340px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 205, 153, 0.62), transparent 70%);
+  filter: blur(12px);
+}
+
+.vendor-listing .vl-art-frame {
+  position: absolute;
+  width: min(75%, 270px);
+  aspect-ratio: 0.84;
+  border-radius: 26px;
+}
+
+.vendor-listing .vl-art-frame-back {
+  transform: rotate(9deg) translate(18px, -2px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.55), rgba(148, 100, 75, 0.16));
+  box-shadow: 0 20px 50px rgba(83, 49, 34, 0.14);
+}
+
+.vendor-listing .vl-art-frame-front {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 23px;
+  color: #f9ede1;
+  transform: rotate(-6deg);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background:
+    radial-gradient(circle at 80% 10%, rgba(229, 157, 104, 0.3), transparent 38%),
+    linear-gradient(145deg, #3d3937 0%, #171b1e 58%, #302923 100%);
+  box-shadow:
+    0 30px 55px rgba(38, 28, 24, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.26);
+}
+
+.vendor-listing .vl-art-frame-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: #eac7a6;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.vendor-listing .vl-art-compass {
+  display: grid;
+  place-items: center;
+  color: #f0c49d;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
+}
+
+.vendor-listing .vl-art-frame-bottom {
+  display: grid;
+  gap: 5px;
+  letter-spacing: 0.14em;
+}
+
+.vendor-listing .vl-art-frame-bottom span {
+  color: #e7bb98;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.vendor-listing .vl-art-frame-bottom strong {
+  font-size: clamp(15px, 1.6vw, 21px);
+  letter-spacing: 0.04em;
+}
+
+.vendor-listing .vl-art-floating {
+  position: absolute;
+  right: 0;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 13px 16px;
+  color: #4d3024;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 14px;
+  background: rgba(255, 248, 238, 0.8);
+  box-shadow: 0 15px 35px rgba(80, 45, 29, 0.16);
+  backdrop-filter: blur(14px);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.vendor-listing .vl-filters {
+  border-color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 18px 45px rgba(46, 39, 34, 0.07), inset 0 1px 0 #fff;
+  backdrop-filter: blur(14px);
+}
+
+.vendor-listing .vl-card-link {
+  isolation: isolate;
+  color: #f9f6f1;
+  border-color: rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(195, 123, 75, 0.2), transparent 40%),
+    linear-gradient(145deg, #343638 0%, #1d2022 48%, #16191b 100%);
+  box-shadow:
+    0 18px 36px rgba(28, 29, 29, 0.17),
+    inset 0 1px 0 rgba(255, 255, 255, 0.17);
+}
+
+.vendor-listing .vl-card-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.09), transparent 35%, transparent 70%, rgba(255, 255, 255, 0.035));
+}
+
+.vendor-listing .vl-card-link:hover {
+  border-color: rgba(239, 185, 143, 0.52);
+  box-shadow: 0 24px 45px rgba(28, 25, 23, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.vendor-listing .vl-card-icon {
+  color: #f3c4a0;
+  border-color: rgba(245, 198, 165, 0.25);
+  background: linear-gradient(145deg, rgba(231, 162, 116, 0.23), rgba(255, 255, 255, 0.05));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+.vendor-listing .vl-card-arrow {
+  color: #f3e6dc;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.vendor-listing .vl-card-link:hover .vl-card-arrow {
+  color: #201b18;
+  background: #f0c19b;
+}
+
+.vendor-listing .vl-card-type {
+  color: #f4c7a5;
+}
+
+.vendor-listing .vl-card-content h3 {
+  color: #fffaf5;
+}
+
+.vendor-listing .vl-card-details p {
+  color: #ddd5cf;
+}
+
+.vendor-listing .vl-card-details svg {
+  color: #efb892;
+}
+
+.vendor-listing .vl-card-bottom {
+  color: #fff5ed;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.vendor-listing .vl-card-link:focus-visible {
+  outline: 3px solid #a63b20;
+  outline-offset: 4px;
+}
+
+.vendor-listing .vl-outro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 260px;
+  color: #fff9f3;
+  border-color: rgba(255, 255, 255, 0.15);
+  background:
+    radial-gradient(circle at 85% 20%, rgba(219, 142, 89, 0.3), transparent 36%),
+    linear-gradient(125deg, #25292c, #171a1d 60%, #3b302a);
+  box-shadow: 0 24px 55px rgba(30, 27, 25, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.vendor-listing .vl-outro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 40%);
+}
+
+.vendor-listing .vl-outro .vl-eyebrow {
+  color: #f4c49f;
+}
+
+.vendor-listing .vl-outro > div > p:last-child {
+  color: #e1d8d0;
+}
+
+.vendor-listing .vl-outro .vl-primary-button {
+  color: #251c18;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: linear-gradient(145deg, #ffe5cf, #e5ac82);
+}
+
+.vendor-listing .vl-outro .vl-primary-button:hover {
+  background: linear-gradient(145deg, #fff0e3, #f0bc94);
+}
+
+@media (max-width: 600px) {
+  .vendor-listing .vl-hero-art {
+    min-height: 315px;
+  }
+
+  .vendor-listing .vl-art-frame {
+    width: min(65%, 220px);
+  }
+
+  .vendor-listing .vl-art-floating {
+    right: 0;
+    bottom: 6px;
+  }
+
+  .vendor-listing .vl-outro {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vendor-listing .vl-card-link,
+  .vendor-listing .vl-card-arrow,
+  .vendor-listing .vl-primary-button {
+    transition: none;
+  }
+}
+/* Vendor listings — clean metallic white backdrop */
+.vendor-listing {
+  background:
+    radial-gradient(ellipse at 85% 12%, rgba(207, 218, 229, 0.3), transparent 34%),
+    radial-gradient(ellipse at 10% 50%, rgba(223, 229, 235, 0.4), transparent 35%),
+    linear-gradient(135deg, #ffffff 0%, #f3f5f7 45%, #ffffff 75%, #eef1f4 100%);
+}
+
+.vendor-listing .vl-hero {
+  background:
+    radial-gradient(circle at 82% 25%, rgba(192, 205, 217, 0.48), transparent 34%),
+    linear-gradient(120deg, #ffffff 0%, #f5f7f9 52%, #dfe5ea 100%);
+}
+
+.vendor-listing .vl-hero::before {
+  background: linear-gradient(
+    125deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.75) 49%,
+    transparent 64%
+  );
+}
+/* Vendor listings — softer entrance and hover motion */
+@media (prefers-reduced-motion: no-preference) {
+  .vendor-listing .vl-hero-copy {
+    animation: vl-soft-entrance 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .vendor-listing .vl-hero-art {
+    animation: vl-soft-entrance 1.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .vendor-listing .vl-card-link {
+    transition:
+      transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 320ms ease,
+      box-shadow 320ms ease;
+  }
+
+  .vendor-listing .vl-card-link:hover {
+    transform: translateY(-3px);
+  }
+
+  .vendor-listing .vl-primary-button {
+    transition:
+      transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+      background 280ms ease,
+      box-shadow 280ms ease;
+  }
+}
+
+@keyframes vl-soft-entrance {
+  from {
+    opacity: 0.65;
+    transform: translate3d(0, 16px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+/* Vendor listings — more expressive hero entrance */
+@media (prefers-reduced-motion: no-preference) {
+  .vendor-listing .vl-hero-copy {
+    animation: vl-premium-hero-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .vendor-listing .vl-hero-art {
+    animation: vl-premium-art-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes vl-premium-hero-in {
+  from {
+    opacity: 0.4;
+    transform: translate3d(0, 35px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes vl-premium-art-in {
+  from {
+    opacity: 0.35;
+    transform: translate3d(0, 42px, 0) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+/* Vendor listings — custom spot-type dropdown */
+.vendor-listing .vl-filters {
+  position: relative;
+  z-index: 5;
+  overflow: visible;
+}
+
+.vendor-listing .vl-type-field {
+  position: relative;
+}
+
+.vendor-listing .vl-field-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #39465b;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.vendor-listing .vl-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.vendor-listing .vl-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 14px;
+  color: #26334b;
+  border: 1px solid #dce1e6;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #f7f9fb);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.vendor-listing .vl-dropdown-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.vendor-listing .vl-dropdown-trigger-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.vendor-listing .vl-dropdown-trigger-text > span:last-child {
+  overflow-wrap: anywhere;
+}
+
+.vendor-listing .vl-dropdown-trigger-icon,
+.vendor-listing .vl-option-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  color: #a84327;
+  border: 1px solid rgba(190, 115, 80, 0.2);
+  border-radius: 10px;
+  background: linear-gradient(145deg, #fff8f3, #f6e8df);
+}
+
+.vendor-listing .vl-dropdown-chevron {
+  flex: 0 0 auto;
+  color: #617087;
+  transition: transform 200ms ease;
+}
+
+.vendor-listing .vl-dropdown[open] .vl-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.vendor-listing .vl-dropdown-trigger:hover,
+.vendor-listing .vl-dropdown[open] .vl-dropdown-trigger {
+  border-color: #ba795e;
+}
+
+.vendor-listing .vl-dropdown-trigger:focus-visible,
+.vendor-listing .vl-dropdown-option:focus-visible {
+  outline: 3px solid #b74425;
+  outline-offset: 3px;
+}
+
+.vendor-listing .vl-dropdown-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 9px);
+  right: 0;
+  left: 0;
+  padding: 10px;
+  color: #f9f6f1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(195, 123, 75, 0.2), transparent 45%),
+    linear-gradient(145deg, #343638, #1b1e20 70%);
+  box-shadow:
+    0 20px 45px rgba(24, 28, 33, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.vendor-listing .vl-dropdown-caption {
+  margin: 4px 8px 8px;
+  color: #efc5a6;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.vendor-listing .vl-dropdown-options {
+  display: grid;
+  gap: 4px;
+  max-height: min(280px, 45vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.vendor-listing .vl-dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  padding: 7px 10px;
+  color: #f8f5f1;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vendor-listing .vl-dropdown-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.vendor-listing .vl-dropdown-option[aria-pressed="true"] {
+  border-color: rgba(239, 185, 143, 0.28);
+  background: rgba(235, 181, 143, 0.14);
+}
+
+.vendor-listing .vl-dropdown-option > svg {
+  flex: 0 0 auto;
+  color: #f4c7a5;
+}
+
+.vendor-listing .vl-dropdown-option .vl-option-icon {
+  color: #f3c4a0;
+  border-color: rgba(245, 198, 165, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.vendor-listing .vl-option-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .vendor-listing .vl-dropdown-trigger {
+    min-height: 52px;
+  }
+
+  .vendor-listing .vl-dropdown-panel {
+    left: 0;
+    right: 0;
+  }
+
+  .vendor-listing .vl-dropdown-option {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vendor-listing .vl-dropdown-chevron {
+    transition: none;
+  }
+}
+/* Vendor listings — white metallic-glass dropdown */
+.vendor-listing .vl-dropdown-panel {
+  color: #17213b;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background:
+    radial-gradient(circle at 90% 0%, rgba(202, 217, 229, 0.55), transparent 48%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(239, 243, 247, 0.96));
+  box-shadow:
+    0 20px 45px rgba(32, 45, 58, 0.2),
+    inset 0 1px 0 #fff;
+  backdrop-filter: blur(18px);
+}
+
+.vendor-listing .vl-dropdown-caption {
+  color: #87503b;
+}
+
+.vendor-listing .vl-dropdown-option {
+  color: #17213b;
+}
+
+.vendor-listing .vl-dropdown-option:hover {
+  background: rgba(205, 215, 225, 0.45);
+}
+
+.vendor-listing .vl-dropdown-option[aria-pressed="true"] {
+  border-color: rgba(175, 103, 71, 0.32);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 244, 235, 0.95),
+    rgba(230, 235, 240, 0.85)
+  );
+}
+
+.vendor-listing .vl-dropdown-option .vl-option-icon {
+  color: #9c3d21;
+  border-color: rgba(177, 105, 75, 0.22);
+  background: linear-gradient(145deg, #ffffff, #f2e7df);
+}
+
+.vendor-listing .vl-dropdown-option > svg {
+  color: #9c3d21;
+}
