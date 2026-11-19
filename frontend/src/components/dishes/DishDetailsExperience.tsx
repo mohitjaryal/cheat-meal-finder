@@ -845,6 +845,14 @@ export function VendorSection({
 
                 <h3>{vendor.name}</h3>
 
+                <Link
+                  href={`/vendors/${vendor.vendor_id}`}
+                  className="de-text-link"
+                >
+                  View vendor details
+                  <ArrowRight size={17} />
+                </Link>
+
                 <span className="de-vendor-type">
                   <BadgeCheck size={15} />
                   {formatVendorType(vendor.vendor_type)}
@@ -939,9 +947,9 @@ export function ReviewsSection({
   const average =
     reviews.length > 0
       ? reviews.reduce(
-          (total, review) => total + review.rating,
-          0
-        ) / reviews.length
+        (total, review) => total + review.rating,
+        0
+      ) / reviews.length
       : null;
 
   return (
