@@ -1,31 +1,111 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import { Eye, EyeOff } from "lucide-react";
 import LoginShell from "@/components/auth/LoginShell";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+const SESSION_TOKEN_KEY = "cmf_access_token";
+
 export default function LoginPage() {
+  const router = useRouter();
   const [submissionMessage, setSubmissionMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const submittingRef = useRef(false);
 
   const inputStyles =
     "h-[52px] w-full rounded-xl border border-espresso/15 bg-[rgba(255,250,240,0.90)] px-4 text-sm text-espresso shadow-[inset_0_1px_0_rgba(255,255,255,0.90),0_4px_16px_rgba(44,26,20,0.04)] outline-none backdrop-blur-md transition duration-200 placeholder:text-muted/60 hover:border-mustard/60 hover:bg-[rgba(255,250,240,0.96)] focus:border-terracotta focus:bg-[#FFFAF0] focus:ring-4 focus:ring-terracotta/10 sm:h-[54px]";
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
 
-    setSubmissionMessage(
-      "Login functionality is coming soon. Backend authentication integration is currently in progress.",
-    );
+    setSubmissionMessage("");
+
+    if (!API_URL) {
+      setSubmissionMessage(
+        "Login is unavailable because the API URL is not configured.",
+      );
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") ?? "").trim();
+    const password = String(formData.get("password") ?? "");
+
+    if (!email || !password) {
+      setSubmissionMessage("Please enter your email and password.");
+      return;
+    }
+
+    submittingRef.current = true;
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/users/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        cache: "no-store",
+      });
+
+      if (response.status === 401) {
+        setSubmissionMessage("Invalid email or password. Please try again.");
+        return;
+      }
+
+      if (!response.ok) {
+        setSubmissionMessage(
+          "Unable to log in right now. Please try again later.",
+        );
+        return;
+      }
+
+      const data: unknown = await response.json();
+
+      if (
+        typeof data !== "object" ||
+        data === null ||
+        !("access_token" in data) ||
+        typeof data.access_token !== "string" ||
+        data.access_token.trim() === ""
+      ) {
+        setSubmissionMessage(
+          "The login response was invalid. Please try again later.",
+        );
+        return;
+      }
+
+      try {
+        window.sessionStorage.setItem(SESSION_TOKEN_KEY, data.access_token);
+      } catch {
+        setSubmissionMessage(
+          "Your browser could not save this session. Please check your browser settings and try again.",
+        );
+        return;
+      }
+
+      form.reset();
+      setShowPassword(false);
+      router.replace("/dashboard");
+    } catch {
+      setSubmissionMessage(
+        "Could not connect to the login service. Please check your connection and try again.",
+      );
+    } finally {
+      submittingRef.current = false;
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <LoginShell>
       <div className="mx-auto w-full max-w-xl">
-        {/* =======================================================
-            LOGIN INTRO
-        ======================================================== */}
         <p
           className="street-stagger-reveal inline-flex rounded-full border border-white/40 bg-mustard/15 px-4 py-2 text-[10px] font-extrabold uppercase tracking-[0.2em] text-terracotta backdrop-blur-sm sm:text-[11px]"
           style={{ animationDelay: "100ms" }}
@@ -47,15 +127,7 @@ export default function LoginPage() {
           Sign in and get back to discovering dishes worth craving.
         </p>
 
-        {/* =======================================================
-            LOGIN FORM
-            UI-only: FastAPI integration pending.
-        ======================================================== */}
-        <form
-          className="mt-7 space-y-4"
-          onSubmit={handleSubmit}
-        >
-          {/* Email */}
+        <form className="mt-7 space-y-4" onSubmit={handleSubmit}>
           <div
             className="street-stagger-reveal"
             style={{ animationDelay: "400ms" }}
@@ -66,7 +138,6 @@ export default function LoginPage() {
             >
               Email Address
             </label>
-
             <input
               id="email"
               name="email"
@@ -80,7 +151,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div
             className="street-stagger-reveal"
             style={{ animationDelay: "500ms" }}
@@ -91,36 +161,46 @@ export default function LoginPage() {
             >
               Password
             </label>
-
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="Enter your password"
-              required
-              aria-required="true"
-              onChange={() => setSubmissionMessage("")}
-              className={inputStyles}
-            />
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder="Enter your password"
+                required
+                aria-required="true"
+                onChange={() => setSubmissionMessage("")}
+                className={`${inputStyles} pr-12`}
+              />
+              <button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-controls="password"
+                onClick={() => setShowPassword((visible) => !visible)}
+                className="absolute inset-y-0 right-1 flex w-11 items-center justify-center rounded-lg text-espresso/65 transition hover:text-terracotta focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta"
+              >
+                {showPassword ? (
+                  <EyeOff size={19} aria-hidden="true" />
+                ) : (
+                  <Eye size={19} aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* =====================================================
-              LOGIN CTA — STREET FRESH BUTTON MOTION V1
-
-              Parent: Sequential entrance animation.
-              Button: Independent hover/press animations.
-          ====================================================== */}
           <div
             className="street-stagger-reveal mt-1"
             style={{ animationDelay: "600ms" }}
           >
             <button
               type="submit"
-              className="auth-cta flex h-[52px] w-full items-center justify-center gap-3 rounded-xl px-5 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-terracotta/25 sm:h-[54px] sm:text-base"
+              disabled={isSubmitting}
+              className="auth-cta flex h-[52px] w-full items-center justify-center gap-3 rounded-xl px-5 text-sm font-bold text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-terracotta/25 disabled:cursor-wait disabled:opacity-70 sm:h-[54px] sm:text-base"
             >
-              <span className="relative z-10">Log In</span>
-
+              <span className="relative z-10">
+                {isSubmitting ? "Logging in..." : "Log In"}
+              </span>
               <span
                 aria-hidden="true"
                 className="auth-cta-arrow relative z-10"
@@ -130,7 +210,6 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {/* UI-only submission feedback */}
           {submissionMessage && (
             <p
               role="status"
@@ -141,11 +220,7 @@ export default function LoginPage() {
             </p>
           )}
 
-          {/* =====================================================
-              FORGOT PASSWORD — STREET FRESH PREMIUM MICRO-MOTION
-
-              UI-only: Password recovery API pending.
-          ====================================================== */}
+          {/* Password recovery remains UI-only until an API is available. */}
           <div
             className="street-stagger-reveal flex justify-center pt-1"
             style={{ animationDelay: "650ms" }}
@@ -164,11 +239,7 @@ export default function LoginPage() {
                 sm:text-sm
               "
             >
-              <span className="relative z-10">
-                Forgot Password?
-              </span>
-
-              {/* Animated underline */}
+              <span className="relative z-10">Forgot Password?</span>
               <span
                 aria-hidden="true"
                 className="
@@ -182,7 +253,6 @@ export default function LoginPage() {
                   group-hover:scale-x-100
                 "
               />
-
               <span className="sr-only">
                 Password recovery is coming soon.
               </span>
@@ -190,10 +260,7 @@ export default function LoginPage() {
           </div>
         </form>
 
-        {/* =======================================================
-            GOOGLE + APPLE + FACEBOOK AUTH UI
-            UI-only: OAuth integration pending.
-        ======================================================== */}
+        {/* Social authentication remains UI-only. */}
         <div
           className="street-stagger-reveal"
           style={{ animationDelay: "700ms" }}
@@ -201,9 +268,6 @@ export default function LoginPage() {
           <SocialAuthButtons mode="login" />
         </div>
 
-        {/* =======================================================
-            SIGNUP REDIRECT
-        ======================================================== */}
         <div
           className="street-stagger-reveal mt-5 border-t border-espresso/10 pt-5 text-center text-sm text-muted"
           style={{ animationDelay: "800ms" }}
