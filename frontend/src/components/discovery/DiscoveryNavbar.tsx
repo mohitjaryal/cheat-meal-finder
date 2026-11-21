@@ -2,9 +2,98 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-export default function DiscoveryNavbar() {
+type AccountStatus = "unknown" | "signed-out" | "verified";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, "");
+const SESSION_TOKEN_KEY = "cmf_access_token";
+
+export default function DiscoveryNavbar({
+  accountStatus,
+}: {
+  accountStatus?: AccountStatus;
+}) {
+  const pathname = usePathname();
+  const [checkedStatus, setCheckedStatus] = useState<AccountStatus>("unknown");
+
+  useEffect(() => {
+    if (accountStatus !== undefined) return;
+
+    let controller: AbortController | null = null;
+    let active = true;
+
+    async function checkAccount() {
+      controller?.abort();
+      const current = new AbortController();
+      controller = current;
+      setCheckedStatus("unknown");
+
+      try {
+        const token = window.sessionStorage.getItem(SESSION_TOKEN_KEY);
+        if (!token) {
+          if (active && !current.signal.aborted) setCheckedStatus("signed-out");
+          return;
+        }
+        if (!API_URL) return;
+
+        const response = await fetch(`${API_URL}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+          signal: current.signal,
+        });
+        if (!active || current.signal.aborted) return;
+
+        // Ignore a response for a session that has since changed.
+        if (window.sessionStorage.getItem(SESSION_TOKEN_KEY) !== token) return;
+
+        if (response.status === 401) {
+          setCheckedStatus("signed-out");
+          return;
+        }
+        if (!response.ok) return;
+
+        const data: unknown = await response.json();
+        if (!active || current.signal.aborted) return;
+        if (window.sessionStorage.getItem(SESSION_TOKEN_KEY) !== token) return;
+
+        if (
+          typeof data === "object" &&
+          data !== null &&
+          "user_id" in data &&
+          typeof data.user_id === "number" &&
+          Number.isSafeInteger(data.user_id) &&
+          data.user_id > 0 &&
+          "full_name" in data &&
+          typeof data.full_name === "string" &&
+          data.full_name.trim() !== "" &&
+          "email" in data &&
+          typeof data.email === "string" &&
+          data.email.trim() !== "" &&
+          "role" in data &&
+          typeof data.role === "string" &&
+          data.role.trim() !== ""
+        ) {
+          setCheckedStatus("verified");
+        }
+      } catch {
+        // A network or storage error does not establish authentication status.
+      }
+    }
+
+    void checkAccount();
+    const handleFocus = () => void checkAccount();
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      active = false;
+      controller?.abort();
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, [accountStatus, pathname]);
+
+  const currentAccountStatus = accountStatus ?? checkedStatus;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -137,23 +226,62 @@ export default function DiscoveryNavbar() {
           <div className="hidden items-center gap-7 lg:flex xl:gap-9">
             <Link
               href="/"
-              aria-current="page"
+              onClick={(event) => {
+              if (
+                window.location.pathname !== "/" ||
+                event.button !== 0 ||
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+              ) return;
+
+              event.preventDefault();
+              if (window.location.hash) {
+                window.history.replaceState(
+                  window.history.state,
+                  "",
+                  window.location.pathname + window.location.search
+                );
+              }
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "instant"
+                  : "smooth",
+              });
+            }}
+              aria-current={pathname === "/" ? "page" : undefined}
               className="rounded-full text-[13px] font-extrabold text-espresso transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+                <path d="m3 10 9-7 9 7" />
+                <path d="M5 9v11h14V9M9 20v-6h6v6" />
+              </svg>
               Discover
             </Link>
 
             <a
-              href="#explore"
+              href="/search"
               className="rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+                <circle cx="12" cy="12" r="9" />
+                <path d="m15.5 8.5-2 5-5 2 2-5z" />
+              </svg>
               Explore Food
             </a>
 
             <a
-              href="#categories"
+              href="/categories"
               className="rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+                <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                <rect x="14" y="14" width="7" height="7" rx="1.5" />
+              </svg>
               Categories
             </a>
           </div>
@@ -190,14 +318,88 @@ export default function DiscoveryNavbar() {
             {/* LOGIN */}
 
             <Link
-              href="/login"
+              href="/dashboard"
+              aria-label="User profile"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-espresso/15 bg-white/30 text-espresso transition-colors hover:bg-white/55 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta sm:h-11 sm:w-11"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+              >
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5 20a7 7 0 0 1 14 0" />
+              </svg>
+            </Link>
+            <Link
+              href={currentAccountStatus === "signed-out" ? "/login" : "/dashboard"}
               className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border border-espresso/10 bg-espresso px-5 text-[13px] font-extrabold text-cream shadow-[0_5px_14px_rgba(44,26,20,0.13)] transition-colors hover:bg-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta sm:h-11 sm:px-6"
             >
-              Log in
+              {currentAccountStatus === "signed-out" ? "Log in" : "Account"}
             </Link>
           </div>
         </nav>
       </header>
+      {!isSearchOpen && (
+        <nav className="cmf-mobile-nav" aria-label="Mobile discovery navigation">
+          <Link
+            href="/"
+            className="cmf-mobile-nav-link"
+            onClick={(event) => {
+              if (
+                window.location.pathname !== "/" ||
+                event.button !== 0 ||
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+              ) return;
+
+              event.preventDefault();
+              if (window.location.hash) {
+                window.history.replaceState(
+                  window.history.state,
+                  "",
+                  window.location.pathname + window.location.search
+                );
+              }
+              window.scrollTo({
+                top: 0,
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "instant"
+                  : "smooth",
+              });
+            }}
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m3 10 9-7 9 7" />
+              <path d="M5 9v11h14V9M9 20v-6h6v6" />
+            </svg>
+            <span>Discover</span>
+          </Link>
+          <Link href="/search" className="cmf-mobile-nav-link">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <path d="m15.5 8.5-2 5-5 2 2-5z" />
+            </svg>
+            <span>Explore</span>
+          </Link>
+          <Link href="/categories" className="cmf-mobile-nav-link">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" />
+              <rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" />
+              <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+            <span>Categories</span>
+          </Link>
+        </nav>
+      )}
 
       {/* ============================================================
           SEARCH MODAL
