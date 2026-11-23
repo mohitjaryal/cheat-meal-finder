@@ -15808,3 +15808,782 @@ canvas {
     outline-color: #a9482b;
   }
 }
+/* =========================================================
+   DISH REVIEWS — METALLIC GLASS EXPERIENCE
+   Scoped to the dedicated reviews page only.
+   ========================================================= */
+
+.cmf-reviews-page {
+  background:
+    radial-gradient(circle at 8% 34%, rgba(205, 237, 232, 0.34), transparent 28rem),
+    linear-gradient(155deg, #fbfcfd 0%, #eef3f4 52%, #f9fbfb 100%);
+  color: #102126;
+}
+
+/* Hero */
+.cmf-reviews-page > section:first-of-type {
+  position: relative;
+  isolation: isolate;
+  border-bottom: 1px solid rgba(91, 120, 122, 0.16);
+  background:
+    radial-gradient(ellipse at 88% 24%, rgba(147, 225, 211, 0.26), transparent 32%),
+    radial-gradient(ellipse at 14% 92%, rgba(193, 211, 215, 0.22), transparent 36%),
+    linear-gradient(120deg, #ffffff 0%, #f0f5f5 48%, #e8f2f1 100%);
+}
+
+.cmf-reviews-page > section:first-of-type::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      112deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.58) 38%,
+      transparent 55%
+    ),
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.08) 0,
+      rgba(255, 255, 255, 0.08) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+  opacity: 0.7;
+}
+
+.cmf-reviews-page > section:first-of-type h1 {
+  color: #10282a;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.cmf-reviews-page > section:first-of-type h1 + p {
+  max-width: 42rem;
+  color: #52676c;
+}
+
+/* Community voices badge */
+.cmf-reviews-page > section:first-of-type h1 ~ p {
+  text-wrap: pretty;
+}
+
+/* Public rating summary */
+.cmf-reviews-page > section:first-of-type .md\:grid-cols-\[1fr_auto\] > div:last-child:not(:first-child) {
+  min-width: 13rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(224, 240, 237, 0.64));
+  box-shadow:
+    0 20px 45px rgba(32, 74, 72, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* Main content */
+.cmf-reviews-page > section:nth-of-type(2) {
+  position: relative;
+}
+
+/* Review cards and empty state */
+.cmf-reviews-page article,
+.cmf-reviews-page > section:nth-of-type(2) .border-dashed {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(142, 169, 168, 0.3);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(240, 248, 247, 0.78));
+  box-shadow:
+    0 18px 45px rgba(39, 76, 76, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.cmf-reviews-page article::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #8dd7c9, transparent);
+}
+
+.cmf-reviews-page article {
+  transition:
+    transform 240ms ease,
+    box-shadow 240ms ease,
+    border-color 240ms ease;
+}
+
+.cmf-reviews-page article:hover {
+  transform: translateY(-3px);
+  border-color: rgba(80, 166, 149, 0.42);
+  box-shadow:
+    0 24px 50px rgba(39, 76, 76, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+/* Share-review card */
+.cmf-reviews-page aside {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(133, 201, 189, 0.25);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(71, 172, 155, 0.2), transparent 42%),
+    linear-gradient(145deg, #173a3b 0%, #10282e 52%, #101e27 100%);
+  box-shadow:
+    0 28px 65px rgba(16, 44, 46, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.cmf-reviews-page aside::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    transparent 35%,
+    rgba(255, 255, 255, 0.025) 75%
+  );
+}
+
+.cmf-reviews-page aside h2 {
+  letter-spacing: -0.035em;
+}
+
+.cmf-reviews-page aside textarea {
+  border-color: rgba(181, 225, 216, 0.22);
+  background: rgba(4, 20, 25, 0.44);
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.12);
+  resize: vertical;
+}
+
+/* Five rating choices in one balanced row where space permits */
+.cmf-reviews-page aside fieldset > div {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.cmf-reviews-page aside fieldset label {
+  min-width: 0;
+  min-height: 3rem;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.45rem 0.2rem;
+  border-radius: 0.9rem;
+  font-size: 0.8rem;
+}
+
+.cmf-reviews-page aside fieldset label:focus-within {
+  outline: 2px solid #a5f3e2;
+  outline-offset: 3px;
+}
+
+.cmf-reviews-page aside fieldset input {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: none;
+}
+
+/* Submit button */
+.cmf-reviews-page aside button[type="submit"] {
+  background: linear-gradient(110deg, #9aebd9, #55d8c3 55%, #a2efe0);
+  box-shadow:
+    0 10px 25px rgba(63, 210, 184, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.cmf-reviews-page aside button[type="submit"]:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+/* Refresh entrance animation */
+@keyframes cmf-reviews-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cmf-reviews-scroll {
+  from {
+    transform: translateY(20px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cmf-reviews-page > section:first-of-type > div:last-child {
+    animation: cmf-reviews-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Progressive enhancement: content remains visible in unsupported browsers. */
+  @supports (animation-timeline: view()) {
+    .cmf-reviews-page article,
+    .cmf-reviews-page > section:nth-of-type(2) aside {
+      animation-name: cmf-reviews-scroll;
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmf-reviews-page article,
+  .cmf-reviews-page aside button[type="submit"] {
+    transition: none;
+  }
+
+  .cmf-reviews-page article:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .cmf-reviews-page aside fieldset > div {
+    gap: 0.25rem;
+  }
+
+  .cmf-reviews-page aside fieldset label {
+    gap: 0.1rem;
+    font-size: 0.72rem;
+  }
+
+  .cmf-reviews-page aside fieldset label svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+/* Reviews journey: feed -> invitation -> compact composer */
+.cmf-reviews-page .cmf-review-journey {
+  width: min(100%, 920px);
+  margin-inline: auto;
+}
+
+.cmf-reviews-page .cmf-review-feed-heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cmf-reviews-page .cmf-review-heading-icon {
+  display: grid;
+  flex: none;
+  width: 3.4rem;
+  height: 3.4rem;
+  place-items: center;
+  border: 1px solid rgba(98, 189, 174, 0.3);
+  border-radius: 1.15rem;
+  color: #126f65;
+  background: linear-gradient(145deg, #ecfffa, #bdeee3);
+  box-shadow: inset 0 1px 0 white, 0 10px 24px rgba(37, 110, 98, 0.1);
+}
+
+.cmf-reviews-page .cmf-review-eyebrow,
+.cmf-reviews-page .cmf-review-transition > p:first-of-type {
+  color: #168474;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.cmf-reviews-page .cmf-review-feed-heading h2 {
+  margin-top: 0.2rem;
+  color: #102b2d;
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.cmf-reviews-page .cmf-review-feed-heading h2 + p {
+  margin-top: 0.15rem;
+  color: #617477;
+  font-size: 0.875rem;
+}
+
+.cmf-reviews-page .cmf-review-count {
+  margin-left: auto;
+  flex: none;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(121, 164, 157, 0.24);
+  border-radius: 999px;
+  color: #416e68;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cmf-reviews-page .cmf-review-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.cmf-reviews-page .cmf-review-item,
+.cmf-reviews-page .cmf-review-empty {
+  border: 1px solid rgba(142, 169, 168, 0.3);
+  border-radius: 1.5rem;
+  padding: clamp(1.25rem, 3vw, 1.65rem);
+}
+
+.cmf-reviews-page .cmf-review-comment {
+  margin-top: 1.1rem;
+  color: #344b50;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cmf-reviews-page .cmf-review-item-label {
+  margin-top: 1.1rem;
+  color: #708482;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.cmf-reviews-page .cmf-review-empty h3 {
+  color: #163434;
+  font-weight: 800;
+}
+
+.cmf-reviews-page .cmf-review-empty p {
+  margin-top: 0.5rem;
+  color: #5a7071;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+/* Editorial invitation between feed and form */
+.cmf-reviews-page .cmf-review-transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(3.5rem, 7vw, 5rem) 1rem 2rem;
+  text-align: center;
+}
+
+.cmf-reviews-page .cmf-review-transition-line {
+  width: 1px;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(transparent, #55b7a5);
+}
+
+.cmf-reviews-page .cmf-review-transition h2 {
+  margin-top: 0.65rem;
+  color: #102f30;
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.15;
+}
+
+.cmf-reviews-page .cmf-review-transition .cmf-review-transition-copy {
+  max-width: 32rem;
+  margin-top: 0.8rem;
+  color: #5e7475;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.cmf-reviews-page .cmf-review-down-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.45rem;
+  border-radius: 1.2rem;
+  color: #176f65;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.cmf-reviews-page .cmf-review-down-link:focus-visible {
+  outline: 2px solid #168474;
+  outline-offset: 6px;
+}
+
+.cmf-reviews-page .cmf-review-down-icon {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border: 1px solid rgba(88, 179, 164, 0.34);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff, #d9f4ed);
+  box-shadow: 0 10px 24px rgba(31, 109, 95, 0.13);
+}
+
+/* Compact composer, not a full-width banner */
+.cmf-reviews-page .cmf-review-compose {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+  width: min(100%, 850px);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+  scroll-margin-top: 2rem;
+  border-radius: 1.8rem;
+  background:
+    radial-gradient(circle at 5% 0%, rgba(99, 212, 191, 0.18), transparent 36%),
+    radial-gradient(circle at 100% 100%, rgba(77, 149, 154, 0.18), transparent 42%),
+    linear-gradient(130deg, #214845 0%, #153336 52%, #11252e 100%);
+}
+
+.cmf-reviews-page .cmf-review-compose-intro {
+  min-width: 0;
+}
+
+.cmf-reviews-page .cmf-review-compose-icon {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border: 1px solid rgba(170, 241, 226, 0.3);
+  border-radius: 1rem;
+  color: #9ef0dd;
+  background: rgba(160, 237, 221, 0.1);
+}
+
+.cmf-reviews-page .cmf-review-compose-eyebrow {
+  margin-top: 1.4rem;
+  color: #8be7d3;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.cmf-reviews-page .cmf-review-compose h2 {
+  margin-top: 0.55rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.cmf-reviews-page .cmf-review-compose-intro h2 + p {
+  max-width: 19rem;
+  margin-top: 0.8rem;
+  color: #c4d7d5;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.cmf-reviews-page .cmf-review-compose-note {
+  display: block;
+  max-width: 16rem;
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(193, 234, 224, 0.15);
+  color: #9ebcb7;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.cmf-reviews-page .cmf-review-compose-panel {
+  min-width: 0;
+  padding: clamp(1rem, 2.5vw, 1.4rem);
+  border: 1px solid rgba(194, 239, 229, 0.16);
+  border-radius: 1.3rem;
+  background: rgba(5, 23, 27, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.cmf-reviews-page .cmf-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.cmf-reviews-page .cmf-review-form textarea {
+  min-height: 86px;
+}
+
+.cmf-reviews-page .cmf-review-form button[type="submit"] {
+  align-self: flex-start;
+  min-width: 155px;
+}
+
+.cmf-reviews-page .cmf-review-login h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.cmf-reviews-page .cmf-review-login p {
+  margin-top: 0.55rem;
+  color: #c7dad7;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.cmf-reviews-page .cmf-review-login-link {
+  display: inline-flex;
+  margin-top: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  color: #10312e;
+  background: linear-gradient(120deg, #b7f5e5, #77dfc8);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.cmf-reviews-page .cmf-review-login-link:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 4px;
+}
+
+.cmf-reviews-page .cmf-review-message {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(192, 232, 223, 0.2);
+  border-radius: 1rem;
+  color: #e7f8f4;
+  background: rgba(5, 23, 27, 0.45);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+@keyframes cmf-review-arrow-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cmf-reviews-page .cmf-review-down-icon {
+    animation: cmf-review-arrow-float 1.8s ease-in-out infinite;
+  }
+}
+
+@media (max-width: 700px) {
+  .cmf-reviews-page .cmf-review-compose {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4rem;
+  }
+
+  .cmf-reviews-page .cmf-review-compose-note {
+    max-width: none;
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmf-reviews-page .cmf-review-feed-heading {
+    flex-wrap: wrap;
+  }
+
+  .cmf-reviews-page .cmf-review-count {
+    margin-left: 4.4rem;
+  }
+
+  .cmf-reviews-page .cmf-review-compose {
+    padding: 1.2rem;
+    border-radius: 1.5rem;
+  }
+
+  .cmf-reviews-page .cmf-review-form button[type="submit"] {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmf-reviews-page .cmf-review-down-icon {
+    animation: none;
+  }
+
+  .cmf-reviews-page .cmf-review-down-link {
+    scroll-behavior: auto;
+  }
+}
+/* Reviews: final visual polish */
+.cmf-reviews-page .cmf-review-transition {
+  padding-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+/* Keep native radios accessible, but make the star tiles the visual control */
+.cmf-reviews-page .cmf-review-form fieldset label {
+  position: relative;
+  gap: 0.35rem;
+  min-height: 3.1rem;
+  border-color: rgba(175, 221, 213, 0.2);
+  background: rgba(19, 47, 50, 0.85);
+  color: #e6f5f1;
+}
+
+.cmf-reviews-page .cmf-review-form fieldset input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cmf-reviews-page .cmf-review-form fieldset label:has(input:checked) {
+  border-color: #a6f0df;
+  background: linear-gradient(135deg, #bcf4e6, #70d8c1);
+  color: #103b35;
+  box-shadow: 0 8px 20px rgba(75, 204, 179, 0.18);
+}
+
+.cmf-reviews-page .cmf-review-form fieldset label:has(input:checked) svg {
+  fill: currentColor;
+}
+
+.cmf-reviews-page .cmf-review-form fieldset label:focus-within {
+  outline: 2px solid #b4f8e8;
+  outline-offset: 3px;
+}
+
+/* A quiet metallic accent, without inventing content or statistics */
+.cmf-reviews-page .cmf-review-compose-note::before {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-bottom: 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8fe7d3, transparent);
+}
+/* Match the review form card to the review feed width */
+.cmf-reviews-page .cmf-review-compose {
+  width: 100%;
+}
+.cmf-reviews-page .cmf-review-form fieldset legend::after {
+  content: " — use arrow keys to change";
+  display: block;
+  margin-top: 0.35rem;
+  color: #b9d5cf;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+/* Smooth anchor navigation on the reviews page */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.cmf-reviews-page) {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.cmf-reviews-page) {
+    scroll-behavior: auto;
+  }
+}
+/* Dish details: link to the dedicated reviews page */
+.de-reviews-page-link-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0 1.25rem 3rem;
+}
+
+.de-reviews-page-link:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 4px;
+}
+/* Reviews section: integrated reviews link */
+.de-reviews-section .de-reviews-page-link-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2.25rem 1rem 1.5rem;
+}
+
+.de-reviews-section .de-reviews-page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  max-width: 100%;
+  padding: 1rem 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.26),
+    rgba(255, 255, 255, 0.1)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    0 12px 30px rgba(15, 8, 40, 0.24);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  backdrop-filter: blur(14px);
+  transition: transform 200ms ease, background 200ms ease, box-shadow 200ms ease;
+}
+
+.de-reviews-section .de-reviews-page-link:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.36),
+    rgba(255, 255, 255, 0.16)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 16px 34px rgba(15, 8, 40, 0.32);
+}
+
+.de-reviews-section .de-reviews-page-link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+}
+
+.de-reviews-page-link-arrow {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .de-reviews-section .de-reviews-page-link {
+    transition: none;
+  }
+
+  .de-reviews-section .de-reviews-page-link:hover {
+    transform: none;
+  }
+}
+/* Reviews link: readable contrast on light glass */
+.de-reviews-section .de-reviews-page-link,
+.de-reviews-section .de-reviews-page-link:hover {
+  color: #202552;
+}
+
+.de-reviews-section .de-reviews-page-link:focus-visible {
+  outline-color: #202552;
+}

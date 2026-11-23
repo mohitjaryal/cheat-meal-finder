@@ -934,10 +934,12 @@ export function VendorSection({
    ===================================================== */
 
 export function ReviewsSection({
+  dishId,
   reviews,
   status,
   onRetry,
 }: {
+  dishId?: number;
   reviews: Review[];
   status: ResourceStatus;
   onRetry: () => void;
@@ -1092,6 +1094,20 @@ export function ReviewsSection({
           </div>
         )}
 
+        {dishId !== undefined && (
+        <div className="de-reviews-page-link-wrap">
+          <Link
+            href={`/dishes/${dishId}/reviews`}
+            className="de-reviews-page-link"
+          >
+            <MessageCircle size={19} aria-hidden="true" />
+            <span>VIEW &amp; SHARE REVIEWS</span>
+            <span className="de-reviews-page-link-arrow" aria-hidden="true">
+              →
+            </span>
+          </Link>
+        </div>
+        )}
         <div className="de-reviews-bottom">
           <Sparkles size={15} />
 
@@ -1613,6 +1629,7 @@ export default function DishDetailsExperience() {
           />
 
           <ReviewsSection
+          dishId={dish.dish_id}
             reviews={reviews}
             status={reviewsStatus}
             onRetry={retryReviews}
