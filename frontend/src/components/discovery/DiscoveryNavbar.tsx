@@ -32,10 +32,14 @@ export default function DiscoveryNavbar({
 
       try {
         const token = window.sessionStorage.getItem(SESSION_TOKEN_KEY);
+
         if (!token) {
-          if (active && !current.signal.aborted) setCheckedStatus("signed-out");
+          if (active && !current.signal.aborted) {
+            setCheckedStatus("signed-out");
+          }
           return;
         }
+
         if (!API_URL) return;
 
         const response = await fetch(`${API_URL}/users/me`, {
@@ -43,18 +47,19 @@ export default function DiscoveryNavbar({
           cache: "no-store",
           signal: current.signal,
         });
-        if (!active || current.signal.aborted) return;
 
-        // Ignore a response for a session that has since changed.
+        if (!active || current.signal.aborted) return;
         if (window.sessionStorage.getItem(SESSION_TOKEN_KEY) !== token) return;
 
         if (response.status === 401) {
           setCheckedStatus("signed-out");
           return;
         }
+
         if (!response.ok) return;
 
         const data: unknown = await response.json();
+
         if (!active || current.signal.aborted) return;
         if (window.sessionStorage.getItem(SESSION_TOKEN_KEY) !== token) return;
 
@@ -78,11 +83,12 @@ export default function DiscoveryNavbar({
           setCheckedStatus("verified");
         }
       } catch {
-        // A network or storage error does not establish authentication status.
+        // Network or storage errors do not establish authentication status.
       }
     }
 
     void checkAccount();
+
     const handleFocus = () => void checkAccount();
     window.addEventListener("focus", handleFocus);
 
@@ -95,30 +101,24 @@ export default function DiscoveryNavbar({
 
   const currentAccountStatus = accountStatus ?? checkedStatus;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
   const searchTriggerRef = useRef<HTMLButtonElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const searchDialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!isSearchOpen) return;
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = "hidden";
-    searchInputRef.current?.focus();
+    closeButtonRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         setIsSearchOpen(false);
-        setSearchQuery("");
-
         requestAnimationFrame(() => {
           searchTriggerRef.current?.focus();
         });
-
         return;
       }
 
@@ -132,19 +132,12 @@ export default function DiscoveryNavbar({
       if (!focusableElements?.length) return;
 
       const firstElement = focusableElements[0];
-      const lastElement =
-        focusableElements[focusableElements.length - 1];
+      const lastElement = focusableElements[focusableElements.length - 1];
 
-      if (
-        event.shiftKey &&
-        document.activeElement === firstElement
-      ) {
+      if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault();
         lastElement.focus();
-      } else if (
-        !event.shiftKey &&
-        document.activeElement === lastElement
-      ) {
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
         event.preventDefault();
         firstElement.focus();
       }
@@ -160,40 +153,53 @@ export default function DiscoveryNavbar({
 
   const closeSearch = () => {
     setIsSearchOpen(false);
-    setSearchQuery("");
-
     requestAnimationFrame(() => {
       searchTriggerRef.current?.focus();
     });
   };
 
-  const openSearch = () => {
-    setIsSearchOpen(true);
+  const handleDiscoverClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (
+      window.location.pathname !== "/" ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (window.location.hash) {
+      window.history.replaceState(
+        window.history.state,
+        "",
+        window.location.pathname + window.location.search
+      );
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
   };
 
   return (
     <>
-      {/* ============================================================
-          STREET FRESH PREMIUM — FLOATING NAVBAR V6
-
-          Sticky positioning will be managed by the homepage.
-          Original navbar dimensions are preserved.
-      ============================================================ */}
-
       <header className="relative z-40 w-full px-4 pt-4 sm:px-8 sm:pt-5 lg:px-12 lg:pt-6">
         <nav
           aria-label="Main navigation"
           className="mx-auto flex h-[62px] w-full max-w-[1120px] items-center justify-between rounded-full border border-white/50 bg-[#FFFAF0]/60 px-4 shadow-[0_12px_38px_rgba(44,26,20,0.13)] backdrop-blur-[16px] backdrop-saturate-[145%] sm:h-[66px] sm:px-5 lg:px-7"
         >
-          {/* BRAND */}
-
           <Link
             href="/"
-            aria-label="Cheat Meal Finder — Home"
+            aria-label="Cheat Meal Finder - Home"
             className="group flex min-w-0 items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
           >
-            {/* LOGO */}
-
             <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-espresso/15 bg-cream shadow-[0_3px_10px_rgba(44,26,20,0.12)] sm:h-11 sm:w-11">
               <Image
                 src="/images/cheat-meal-logo-candidate.png"
@@ -205,99 +211,118 @@ export default function DiscoveryNavbar({
               />
             </span>
 
-            {/* BRAND TEXT */}
-
             <span className="flex min-w-0 flex-col leading-none">
               <span className="font-display whitespace-nowrap text-[13px] font-extrabold tracking-[-0.045em] text-espresso sm:text-[15px]">
-                CHEAT
-                <span className="text-terracotta">MEAL</span>
+                CHEAT<span className="text-terracotta">MEAL</span>
               </span>
-
-              {/* V6: FOOD FINDER VISIBLE ON MOBILE */}
-
               <span className="mt-1 block whitespace-nowrap text-[8px] font-extrabold uppercase tracking-[0.12em] text-olive sm:text-[9px] sm:tracking-[0.18em]">
                 FOOD FINDER
               </span>
             </span>
           </Link>
 
-          {/* DESKTOP NAVIGATION */}
-
-          <div className="hidden items-center gap-7 lg:flex xl:gap-9">
+          <div className="hidden items-center gap-4 lg:flex xl:gap-6">
             <Link
               href="/"
-              onClick={(event) => {
-              if (
-                window.location.pathname !== "/" ||
-                event.button !== 0 ||
-                event.metaKey ||
-                event.ctrlKey ||
-                event.shiftKey ||
-                event.altKey
-              ) return;
-
-              event.preventDefault();
-              if (window.location.hash) {
-                window.history.replaceState(
-                  window.history.state,
-                  "",
-                  window.location.pathname + window.location.search
-                );
-              }
-              window.scrollTo({
-                top: 0,
-                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                  ? "instant"
-                  : "smooth",
-              });
-            }}
+              onClick={handleDiscoverClick}
               aria-current={pathname === "/" ? "page" : undefined}
-              className="rounded-full text-[13px] font-extrabold text-espresso transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+              className="whitespace-nowrap rounded-full text-[13px] font-extrabold text-espresso transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-1.5 inline-block h-4 w-4 align-middle"
+              >
                 <path d="m3 10 9-7 9 7" />
                 <path d="M5 9v11h14V9M9 20v-6h6v6" />
               </svg>
               Discover
             </Link>
 
-            <a
+            <Link
               href="/search"
-              className="rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+              aria-current={pathname === "/search" ? "page" : undefined}
+              className="whitespace-nowrap rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-1.5 inline-block h-4 w-4 align-middle"
+              >
                 <circle cx="12" cy="12" r="9" />
                 <path d="m15.5 8.5-2 5-5 2 2-5z" />
               </svg>
               Explore Food
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/categories"
-              className="rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+              aria-current={pathname === "/categories" ? "page" : undefined}
+              className="whitespace-nowrap rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
             >
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 inline-block h-4 w-4 align-middle">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-1.5 inline-block h-4 w-4 align-middle"
+              >
                 <rect x="3" y="3" width="7" height="7" rx="1.5" />
                 <rect x="14" y="3" width="7" height="7" rx="1.5" />
                 <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 <rect x="14" y="14" width="7" height="7" rx="1.5" />
               </svg>
               Categories
-            </a>
+            </Link>
+
+            <Link
+              href="/vendors"
+              aria-current={
+                pathname === "/vendors" || pathname.startsWith("/vendors/")
+                  ? "page"
+                  : undefined
+              }
+              className="whitespace-nowrap rounded-full text-[13px] font-extrabold text-espresso/85 transition-colors hover:text-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="mr-1.5 inline-block h-4 w-4 align-middle"
+              >
+                <path d="M3 10V8l2-5h14l2 5v2" />
+                <path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" />
+                <path d="M5 13v8h14v-8M9 21v-5h6v5" />
+              </svg>
+              Vendors
+            </Link>
           </div>
 
-          {/* RIGHT ACTIONS */}
-
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            {/* SEARCH */}
-
             <button
               ref={searchTriggerRef}
               type="button"
-              aria-label="Search food"
+              aria-label="Open discovery shortcuts"
               aria-haspopup="dialog"
               aria-expanded={isSearchOpen}
-              onClick={openSearch}
+              onClick={() => setIsSearchOpen(true)}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-espresso/15 bg-white/30 text-espresso transition-colors hover:bg-white/55 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta sm:h-11 sm:w-11"
             >
               <svg
@@ -314,8 +339,6 @@ export default function DiscoveryNavbar({
                 <path d="m16 16 5 5" />
               </svg>
             </button>
-
-            {/* LOGIN */}
 
             <Link
               href="/dashboard"
@@ -336,8 +359,13 @@ export default function DiscoveryNavbar({
                 <path d="M5 20a7 7 0 0 1 14 0" />
               </svg>
             </Link>
+
             <Link
-              href={currentAccountStatus === "signed-out" ? "/login" : "/dashboard"}
+              href={
+                currentAccountStatus === "signed-out"
+                  ? "/login"
+                  : "/dashboard"
+              }
               className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border border-espresso/10 bg-espresso px-5 text-[13px] font-extrabold text-cream shadow-[0_5px_14px_rgba(44,26,20,0.13)] transition-colors hover:bg-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta sm:h-11 sm:px-6"
             >
               {currentAccountStatus === "signed-out" ? "Log in" : "Account"}
@@ -345,52 +373,64 @@ export default function DiscoveryNavbar({
           </div>
         </nav>
       </header>
+
       {!isSearchOpen && (
         <nav className="cmf-mobile-nav" aria-label="Mobile discovery navigation">
           <Link
             href="/"
             className="cmf-mobile-nav-link"
-            onClick={(event) => {
-              if (
-                window.location.pathname !== "/" ||
-                event.button !== 0 ||
-                event.metaKey ||
-                event.ctrlKey ||
-                event.shiftKey ||
-                event.altKey
-              ) return;
-
-              event.preventDefault();
-              if (window.location.hash) {
-                window.history.replaceState(
-                  window.history.state,
-                  "",
-                  window.location.pathname + window.location.search
-                );
-              }
-              window.scrollTo({
-                top: 0,
-                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-                  ? "instant"
-                  : "smooth",
-              });
-            }}
+            onClick={handleDiscoverClick}
+            aria-current={pathname === "/" ? "page" : undefined}
           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="m3 10 9-7 9 7" />
               <path d="M5 9v11h14V9M9 20v-6h6v6" />
             </svg>
             <span>Discover</span>
           </Link>
-          <Link href="/search" className="cmf-mobile-nav-link">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+
+          <Link
+            href="/search"
+            className="cmf-mobile-nav-link"
+            aria-current={pathname === "/search" ? "page" : undefined}
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="12" cy="12" r="9" />
               <path d="m15.5 8.5-2 5-5 2 2-5z" />
             </svg>
             <span>Explore</span>
           </Link>
-          <Link href="/categories" className="cmf-mobile-nav-link">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+
+          <Link
+            href="/categories"
+            className="cmf-mobile-nav-link"
+            aria-current={pathname === "/categories" ? "page" : undefined}
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x="3" y="3" width="7" height="7" rx="1.5" />
               <rect x="14" y="3" width="7" height="7" rx="1.5" />
               <rect x="3" y="14" width="7" height="7" rx="1.5" />
@@ -398,12 +438,33 @@ export default function DiscoveryNavbar({
             </svg>
             <span>Categories</span>
           </Link>
+
+          <Link
+            href="/vendors"
+            className="cmf-mobile-nav-link"
+            aria-current={
+              pathname === "/vendors" || pathname.startsWith("/vendors/")
+                ? "page"
+                : undefined
+            }
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 10V8l2-5h14l2 5v2" />
+              <path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" />
+              <path d="M5 13v8h14v-8M9 21v-5h6v5" />
+            </svg>
+            <span>Vendors</span>
+          </Link>
         </nav>
       )}
-
-      {/* ============================================================
-          SEARCH MODAL
-      ============================================================ */}
 
       {isSearchOpen && (
         <div
@@ -421,59 +482,78 @@ export default function DiscoveryNavbar({
             aria-labelledby="discovery-search-title"
             className="w-full max-w-xl rounded-[2rem] border border-white/65 bg-[#FFFAF0]/95 p-5 shadow-[0_30px_90px_rgba(44,26,20,0.35)] backdrop-blur-xl sm:p-7"
           >
-            {/* HEADER */}
-
             <div className="mb-6 flex items-start justify-between gap-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-terracotta">
                   Street Fresh Discovery
                 </p>
-
                 <h2
                   id="discovery-search-title"
                   className="font-display mt-2 text-2xl font-bold tracking-[-0.05em] text-espresso sm:text-3xl"
                 >
-                  What are you craving?
+                  Where would you like to explore?
                 </h2>
               </div>
 
               <button
+                ref={closeButtonRef}
                 type="button"
-                aria-label="Close food search"
+                aria-label="Close discovery shortcuts"
                 onClick={closeSearch}
                 className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-espresso/15 bg-white/60 text-xl text-espresso transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
               >
-                ×
+                &times;
               </button>
             </div>
 
-            {/* SEARCH FIELD */}
-
-            <div>
-              <label
-                htmlFor="discovery-search-input"
-                className="mb-2 block text-xs font-bold text-espresso"
-              >
-                Search dishes or cravings
-              </label>
-
-              <input
-                ref={searchInputRef}
-                id="discovery-search-input"
-                type="search"
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="Try spicy momos, burgers, desserts..."
-                className="h-14 w-full rounded-2xl border border-border bg-white/85 px-5 text-sm font-semibold text-espresso outline-none transition-colors placeholder:text-muted focus:border-terracotta focus:ring-2 focus:ring-terracotta/20"
-              />
-            </div>
-
-            {/* UI-ONLY STATUS */}
-
-            <p className="mt-5 text-xs leading-6 text-muted">
-              Food search results will be available once discovery
-              search integration is ready.
+            <p className="mb-5 text-sm leading-6 text-muted">
+              Browse dishes and filters, or discover local vendors.
             </p>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Link
+                href="/search"
+                onClick={closeSearch}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-espresso px-5 text-sm font-bold text-cream transition-colors hover:bg-terracotta focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <circle cx="10.8" cy="10.8" r="6.8" />
+                  <path d="m16 16 5 5" />
+                </svg>
+                Explore Food
+              </Link>
+
+              <Link
+                href="/vendors"
+                onClick={closeSearch}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-espresso/20 bg-white/60 px-5 text-sm font-bold text-espresso transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta"
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                >
+                  <path d="M3 10V8l2-5h14l2 5v2" />
+                  <path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" />
+                  <path d="M5 13v8h14v-8M9 21v-5h6v5" />
+                </svg>
+                Vendors
+              </Link>
+            </div>
           </div>
         </div>
       )}

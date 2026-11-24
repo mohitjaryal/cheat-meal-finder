@@ -81,6 +81,38 @@ export default function LoginPage() {
         return;
       }
 
+      // Verify the account role with the backend before choosing a destination.
+      const accountResponse = await fetch(`${API_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${data.access_token}` },
+        cache: "no-store",
+      });
+      if (!accountResponse.ok) {
+        setSubmissionMessage(
+          "Login succeeded, but we could not verify your account. Please try again.",
+        );
+        return;
+      }
+      const account: unknown = await accountResponse.json();
+      if (
+        typeof account !== "object" ||
+        account === null ||
+        !("role" in account) ||
+        typeof account.role !== "string" ||
+        account.role.trim() === ""
+      ) {
+        setSubmissionMessage(
+          "The account response was invalid. Please try again later.",
+        );
+        return;
+      }
+
+      // Only a fixed internal destination is accepted; never redirect to a URL
+      // supplied directly by the query string.
+      const requestedAdmin =
+        new URLSearchParams(window.location.search).get("from") === "admin";
+      const destination =
+        account.role === "admin" || requestedAdmin ? "/admin" : "/dashboard";
+
       try {
         window.sessionStorage.setItem(SESSION_TOKEN_KEY, data.access_token);
       } catch {
@@ -92,7 +124,7 @@ export default function LoginPage() {
 
       form.reset();
       setShowPassword(false);
-      router.replace("/dashboard");
+      router.replace(destination);
     } catch {
       setSubmissionMessage(
         "Could not connect to the login service. Please check your connection and try again.",

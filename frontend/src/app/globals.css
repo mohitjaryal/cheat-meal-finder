@@ -16587,3 +16587,1135 @@ canvas {
 .de-reviews-section .de-reviews-page-link:focus-visible {
   outline-color: #202552;
 }
+/* =========================================================
+   ADMIN WORKSPACE — editorial metallic glass
+   ========================================================= */
+
+.cmf-admin-workspace {
+  min-height: 100vh;
+  color: #183034;
+  background:
+    radial-gradient(ellipse at 8% 18%, rgba(166, 222, 210, 0.24), transparent 34rem),
+    radial-gradient(ellipse at 94% 42%, rgba(192, 204, 226, 0.26), transparent 38rem),
+    linear-gradient(145deg, #f9fbfa 0%, #edf3f2 50%, #f6f8fa 100%);
+}
+
+.cmf-admin-main {
+  position: relative;
+  overflow: hidden;
+  padding: 10rem 1.5rem 7rem;
+}
+
+.cmf-admin-shell {
+  position: relative;
+  width: min(100%, 1280px);
+  margin-inline: auto;
+}
+
+.cmf-admin-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cmf-admin-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(130, 165, 158, 0.28);
+  border-radius: 999px;
+  color: #42615e;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 8px 25px rgba(41, 78, 72, 0.06);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  backdrop-filter: blur(14px);
+  transition: transform 200ms ease, background 200ms ease;
+}
+
+.cmf-admin-back:hover {
+  transform: translateX(-3px);
+  background: #fff;
+}
+
+.cmf-admin-top-label {
+  color: #829391;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.cmf-admin-top-label span {
+  margin-inline: 0.35rem;
+  color: #9bc4ba;
+}
+
+/* Hero */
+
+.cmf-admin-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.65fr);
+  align-items: center;
+  min-height: 350px;
+  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid rgba(171, 231, 218, 0.35);
+  border-radius: 2rem;
+  color: #fff;
+  background:
+    radial-gradient(circle at 85% 18%, rgba(111, 213, 191, 0.26), transparent 30%),
+    radial-gradient(circle at 5% 100%, rgba(90, 170, 153, 0.22), transparent 38%),
+    linear-gradient(120deg, #214a47 0%, #112e32 54%, #17263a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 28px 65px rgba(23, 61, 57, 0.18);
+}
+
+.cmf-admin-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(115deg, transparent 20%, rgba(255, 255, 255, 0.08) 43%, transparent 59%),
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 6px);
+}
+
+.cmf-admin-hero-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 39rem;
+}
+
+.cmf-admin-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid rgba(177, 238, 222, 0.24);
+  border-radius: 999px;
+  color: #adf1df;
+  background: rgba(173, 237, 219, 0.08);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.cmf-admin-hero h1 {
+  max-width: 12ch;
+  margin-top: 1.45rem;
+  font-size: clamp(2.4rem, 4.5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+
+.cmf-admin-hero h1 em {
+  color: #a1ead8;
+  font-style: normal;
+}
+
+.cmf-admin-hero-copy > p {
+  max-width: 30rem;
+  margin-top: 1.2rem;
+  color: #c7dcd8;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.cmf-admin-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  color: #b4d4cd;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.cmf-admin-hero-meta > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cmf-admin-meta-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #a0edda;
+}
+
+.cmf-admin-meta-divider {
+  width: 1px;
+  height: 1rem;
+  background: rgba(207, 239, 231, 0.24);
+}
+
+.cmf-admin-hero-art {
+  position: relative;
+  display: grid;
+  min-height: 260px;
+  place-items: center;
+}
+
+.cmf-admin-orbit {
+  position: absolute;
+  border: 1px solid rgba(185, 244, 229, 0.17);
+  border-radius: 50%;
+}
+
+.cmf-admin-orbit-outer {
+  width: 245px;
+  height: 245px;
+  box-shadow: 0 0 0 2rem rgba(176, 238, 220, 0.025);
+}
+
+.cmf-admin-orbit-inner {
+  width: 175px;
+  height: 175px;
+  border-style: dashed;
+}
+
+.cmf-admin-art-core {
+  display: grid;
+  width: 110px;
+  height: 110px;
+  place-items: center;
+  border: 1px solid rgba(194, 248, 234, 0.3);
+  border-radius: 2rem;
+  color: #adf1df;
+  background: linear-gradient(145deg, rgba(208, 255, 243, 0.18), rgba(146, 227, 208, 0.05));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 20px 45px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(14px);
+}
+
+.cmf-admin-art-badge {
+  position: absolute;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(205, 248, 236, 0.25);
+  border-radius: 1rem;
+  color: #c9f8ea;
+  background: rgba(34, 79, 75, 0.8);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cmf-admin-art-badge-one {
+  top: 14%;
+  right: 23%;
+}
+
+.cmf-admin-art-badge-two {
+  bottom: 18%;
+  left: 20%;
+}
+
+.cmf-admin-art-caption {
+  position: absolute;
+  bottom: 0;
+  color: #a9ccc3;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+/* Access card */
+
+.cmf-admin-access {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(234, 245, 242, 0.82));
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 24px 55px rgba(38, 77, 70, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.cmf-admin-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #168474;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.cmf-admin-access-intro h2 {
+  max-width: 15ch;
+  margin-top: 0.9rem;
+  color: #173638;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.cmf-admin-access-intro > p {
+  max-width: 28rem;
+  margin-top: 1rem;
+  color: #607875;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+.cmf-admin-access-footnote {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
+  color: #71908a;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.cmf-admin-access-panel {
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border: 1px solid rgba(157, 191, 183, 0.35);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 15px 35px rgba(45, 86, 78, 0.07);
+}
+
+.cmf-admin-access-icon,
+.cmf-admin-section-icon,
+.cmf-admin-stat-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border: 1px solid rgba(91, 178, 160, 0.25);
+  color: #14786b;
+  background: linear-gradient(145deg, #f3fffb, #c8eee4);
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.cmf-admin-access-icon {
+  width: 3.3rem;
+  height: 3.3rem;
+  margin-bottom: 1.25rem;
+  border-radius: 1.1rem;
+}
+
+.cmf-admin-panel-kicker,
+.cmf-admin-overline {
+  color: #168474;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.cmf-admin-access-panel h3 {
+  margin-top: 0.5rem;
+  color: #173638;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.cmf-admin-access-panel p {
+  margin-top: 0.6rem;
+  color: #617875;
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.cmf-admin-primary,
+.cmf-admin-refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.cmf-admin-primary {
+  margin-top: 1.4rem;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #126f65;
+  color: #fff;
+  background: linear-gradient(120deg, #147b6e, #105e58);
+  box-shadow: 0 10px 24px rgba(18, 111, 101, 0.2);
+}
+
+.cmf-admin-primary:hover,
+.cmf-admin-refresh:hover {
+  transform: translateY(-2px);
+}
+
+.cmf-admin-workspace a:focus-visible,
+.cmf-admin-workspace button:focus-visible,
+.cmf-admin-table-wrap:focus-visible {
+  outline: 3px solid #168474;
+  outline-offset: 4px;
+}
+
+/* Data workspace */
+
+.cmf-admin-content {
+  margin-top: 3rem;
+}
+
+.cmf-admin-content-heading,
+.cmf-admin-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cmf-admin-content-heading h2 {
+  margin-top: 0.55rem;
+  color: #173638;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.cmf-admin-content-heading p {
+  margin-top: 0.35rem;
+  color: #6a807d;
+  font-size: 0.85rem;
+}
+
+.cmf-admin-refresh {
+  padding: 0.85rem 1.1rem;
+  border: 1px solid rgba(133, 176, 166, 0.38);
+  color: #285e56;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 22px rgba(38, 77, 70, 0.06);
+}
+
+.cmf-admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cmf-admin-stat {
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(165, 230, 214, 0.3), transparent 55%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(232, 245, 241, 0.85));
+  box-shadow: inset 0 1px 0 #fff, 0 18px 35px rgba(38, 77, 70, 0.07);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.cmf-admin-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: inset 0 1px 0 #fff, 0 24px 40px rgba(38, 77, 70, 0.12);
+}
+
+.cmf-admin-stat-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  color: #83a8a0;
+}
+
+.cmf-admin-stat-icon,
+.cmf-admin-section-icon {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 1rem;
+}
+
+.cmf-admin-stat-count {
+  margin-top: 1.3rem;
+  color: #183d3b;
+  font-size: 2.4rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.cmf-admin-stat h3 {
+  margin-top: 0.6rem;
+  color: #254b47;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.cmf-admin-stat-caption {
+  margin-top: 0.25rem;
+  color: #748b87;
+  font-size: 0.78rem;
+}
+
+.cmf-admin-section {
+  margin-top: 1.4rem;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1.7rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(241, 248, 246, 0.88));
+  box-shadow: inset 0 1px 0 #fff, 0 18px 40px rgba(38, 77, 70, 0.07);
+  backdrop-filter: blur(16px);
+}
+
+.cmf-admin-section-heading-copy {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cmf-admin-section-heading h2 {
+  margin-top: 0.3rem;
+  color: #173638;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.cmf-admin-section-heading p {
+  margin-top: 0.3rem;
+  color: #718783;
+  font-size: 0.8rem;
+}
+
+.cmf-admin-count {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(134, 180, 169, 0.28);
+  border-radius: 999px;
+  color: #5b7973;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.cmf-admin-empty {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  padding: 1.3rem;
+  border: 1px dashed rgba(130, 176, 164, 0.4);
+  border-radius: 1rem;
+  color: #6e8982;
+  background: rgba(241, 248, 246, 0.7);
+  font-size: 0.85rem;
+}
+
+.cmf-admin-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.cmf-admin-item {
+  padding: 1.2rem;
+  border: 1px solid rgba(151, 188, 179, 0.28);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.65);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.cmf-admin-item:hover {
+  border-color: rgba(79, 166, 149, 0.45);
+  box-shadow: 0 10px 25px rgba(39, 83, 76, 0.07);
+}
+
+.cmf-admin-item-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: #31534e;
+  font-size: 0.85rem;
+}
+
+.cmf-admin-item-top time,
+.cmf-admin-item-meta {
+  color: #718984;
+  font-size: 0.78rem;
+}
+
+.cmf-admin-item-meta {
+  margin-top: 0.65rem;
+}
+
+.cmf-admin-item-copy {
+  margin-top: 0.8rem;
+  color: #405e59;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.cmf-admin-table-wrap {
+  max-width: 100%;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid rgba(151, 188, 179, 0.25);
+  border-radius: 1rem;
+}
+
+.cmf-admin-table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.82rem;
+}
+
+.cmf-admin-table th {
+  padding: 1rem;
+  color: #718984;
+  background: rgba(232, 244, 240, 0.7);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cmf-admin-table td {
+  padding: 1rem;
+  border-top: 1px solid rgba(151, 188, 179, 0.18);
+  color: #405e59;
+  overflow-wrap: anywhere;
+}
+
+.cmf-admin-table td:nth-child(2) {
+  color: #254b47;
+  font-weight: 700;
+}
+
+/* Motion: content remains visible without scroll-timeline support */
+
+@keyframes cmf-admin-workspace-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cmf-admin-workspace-scroll {
+  from { transform: translateY(18px); }
+  to { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cmf-admin-hero {
+    animation: cmf-admin-workspace-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .cmf-admin-access {
+    animation: cmf-admin-workspace-enter 700ms 100ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    .cmf-admin-section,
+    .cmf-admin-stat {
+      animation: cmf-admin-workspace-scroll 1ms linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .cmf-admin-main {
+    padding: 8.5rem 1rem 7rem;
+  }
+
+  .cmf-admin-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .cmf-admin-hero-art {
+    min-height: 210px;
+    margin-top: 1rem;
+  }
+
+  .cmf-admin-orbit-outer {
+    width: 190px;
+    height: 190px;
+  }
+
+  .cmf-admin-orbit-inner {
+    width: 140px;
+    height: 140px;
+  }
+
+  .cmf-admin-art-core {
+    width: 90px;
+    height: 90px;
+  }
+
+  .cmf-admin-access {
+    grid-template-columns: 1fr;
+  }
+
+  .cmf-admin-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmf-admin-top-label {
+    display: none;
+  }
+
+  .cmf-admin-hero,
+  .cmf-admin-access {
+    border-radius: 1.5rem;
+  }
+
+  .cmf-admin-hero h1 {
+    font-size: 2.35rem;
+  }
+
+  .cmf-admin-section-heading-copy {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmf-admin-back,
+  .cmf-admin-primary,
+  .cmf-admin-refresh,
+  .cmf-admin-stat,
+  .cmf-admin-item {
+    transition: none;
+  }
+
+  .cmf-admin-back:hover,
+  .cmf-admin-primary:hover,
+  .cmf-admin-refresh:hover,
+  .cmf-admin-stat:hover {
+    transform: none;
+  }
+}
+/* ADMIN — access first + dark red metallic hero */
+
+.cmf-admin-workspace .cmf-admin-access {
+  margin-top: 0;
+}
+
+.cmf-admin-workspace .cmf-admin-access + .cmf-admin-hero {
+  margin-top: 1.5rem;
+}
+
+.cmf-admin-workspace .cmf-admin-hero {
+  border-color: rgba(255, 190, 184, 0.28);
+  background:
+    radial-gradient(
+      ellipse at 76% 8%,
+      rgba(255, 180, 165, 0.22),
+      transparent 32%
+    ),
+    radial-gradient(
+      ellipse at 8% 100%,
+      rgba(174, 48, 48, 0.38),
+      transparent 42%
+    ),
+    radial-gradient(
+      ellipse at 100% 100%,
+      rgba(114, 23, 44, 0.42),
+      transparent 40%
+    ),
+    linear-gradient(
+      125deg,
+      #64252b 0%,
+      #401a23 42%,
+      #261722 74%,
+      #1c1824 100%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 235, 227, 0.27),
+    inset 0 -1px 0 rgba(25, 4, 10, 0.45),
+    0 28px 65px rgba(78, 25, 33, 0.22);
+}
+
+.cmf-admin-workspace .cmf-admin-hero::before {
+  background:
+    linear-gradient(
+      115deg,
+      transparent 16%,
+      rgba(255, 230, 220, 0.13) 39%,
+      rgba(255, 210, 201, 0.025) 48%,
+      transparent 63%
+    ),
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 235, 230, 0.026) 0 1px,
+      transparent 1px 6px
+    );
+}
+
+.cmf-admin-workspace .cmf-admin-eyebrow {
+  border-color: rgba(255, 204, 194, 0.3);
+  color: #ffe0d9;
+  background: rgba(255, 202, 192, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.cmf-admin-workspace .cmf-admin-hero h1 em {
+  color: #ffb8aa;
+}
+
+.cmf-admin-workspace .cmf-admin-hero-copy > p {
+  color: #f0d5d1;
+}
+
+.cmf-admin-workspace .cmf-admin-hero-meta {
+  color: #e5c3bd;
+}
+
+.cmf-admin-workspace .cmf-admin-meta-dot {
+  background: #ffb9a9;
+  box-shadow: 0 0 12px rgba(255, 171, 155, 0.7);
+}
+
+.cmf-admin-workspace .cmf-admin-meta-divider {
+  background: rgba(255, 220, 214, 0.28);
+}
+
+.cmf-admin-workspace .cmf-admin-orbit {
+  border-color: rgba(255, 210, 201, 0.2);
+}
+
+.cmf-admin-workspace .cmf-admin-orbit-outer {
+  box-shadow: 0 0 0 2rem rgba(255, 205, 194, 0.035);
+}
+
+.cmf-admin-workspace .cmf-admin-art-core {
+  border-color: rgba(255, 219, 210, 0.35);
+  color: #ffd5ca;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 226, 217, 0.23),
+    rgba(196, 91, 91, 0.09)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 245, 240, 0.36),
+    inset 0 -1px 0 rgba(95, 24, 32, 0.22),
+    0 20px 45px rgba(18, 5, 10, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.cmf-admin-workspace .cmf-admin-art-badge {
+  border-color: rgba(255, 217, 208, 0.28);
+  color: #ffe0d8;
+  background: rgba(100, 42, 48, 0.68);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 238, 231, 0.18),
+    0 10px 25px rgba(24, 5, 11, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.cmf-admin-workspace .cmf-admin-art-caption {
+  color: #e2bdb5;
+}
+/* Admin: tighter spacing below the navbar */
+.cmf-admin-workspace .cmf-admin-main {
+  padding-top: 2.5rem;
+}
+
+@media (max-width: 760px) {
+  .cmf-admin-workspace .cmf-admin-main {
+    padding-top: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmf-admin-workspace .cmf-admin-main {
+    padding-top: 1.25rem;
+  }
+}
+/* Admin: slightly more breathing room below navbar */
+.cmf-admin-workspace .cmf-admin-main {
+  padding-top: 4rem;
+}
+
+@media (max-width: 760px) {
+  .cmf-admin-workspace .cmf-admin-main {
+    padding-top: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmf-admin-workspace .cmf-admin-main {
+    padding-top: 2rem;
+  }
+}
+/* Admin hero: compact orbit artwork on mobile only */
+@media (max-width: 480px) {
+  .cmf-admin-workspace .cmf-admin-hero {
+    padding: 1.75rem 1.5rem 1.5rem;
+  }
+
+  .cmf-admin-workspace .cmf-admin-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.35rem);
+  }
+
+  .cmf-admin-workspace .cmf-admin-hero-meta {
+    gap: 0.55rem;
+    margin-top: 1.5rem;
+  }
+
+  .cmf-admin-workspace .cmf-admin-hero-art {
+    width: min(100%, 210px);
+    min-height: 190px;
+    margin: 1.75rem auto 0;
+  }
+
+  .cmf-admin-workspace .cmf-admin-orbit-outer {
+    width: 160px;
+    height: 160px;
+    box-shadow: 0 0 0 1.1rem rgba(255, 205, 194, 0.035);
+  }
+
+  .cmf-admin-workspace .cmf-admin-orbit-inner {
+    width: 118px;
+    height: 118px;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-core {
+    width: 74px;
+    height: 74px;
+    border-radius: 1.4rem;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-core svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 0.85rem;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-badge-one {
+    top: 12%;
+    right: 10%;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-badge-two {
+    bottom: 20%;
+    left: 10%;
+  }
+
+  .cmf-admin-workspace .cmf-admin-art-caption {
+    bottom: 0;
+    text-align: center;
+  }
+}
+/* Admin hero metadata: one row on small screens */
+@media (max-width: 480px) {
+  .cmf-admin-workspace .cmf-admin-hero-meta {
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+    font-size: clamp(0.46rem, 2vw, 0.58rem);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .cmf-admin-workspace .cmf-admin-meta-divider {
+    flex: 0 0 1px;
+  }
+
+  .cmf-admin-workspace .cmf-admin-meta-dot {
+    flex: 0 0 0.42rem;
+  }
+}
+/* Compact shared navbar for very narrow screens */
+@media (max-width: 360px) {
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) {
+    padding-inline: 8px;
+    gap: 6px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > a:first-child {
+    flex-shrink: 0;
+    gap: 4px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > a:first-child > span:first-child {
+    width: 32px;
+    height: 32px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > a:first-child > span:last-child > span:first-child {
+    font-size: 11px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > a:first-child > span:last-child > span:last-child {
+    font-size: 7px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > div:has(> button[aria-label="Search food"]) {
+    gap: 4px;
+  }
+
+  nav[aria-label="Main navigation"]:has(
+      > div > button[aria-label="Search food"]
+    ) > div:has(> button[aria-label="Search food"]) > a:last-child {
+    padding-inline: 8px;
+    font-size: 12px;
+  }
+}
+/* Craving Compass — compact result cards */
+.compass-v3 .compass-results-grid {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, 300px), 1fr)
+  );
+}
+
+@media (max-width: 639px) {
+  .compass-v3 .compass-results-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Craving Compass — slightly wider dish cards */
+.compass-v3 .compass-results-grid {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, 450px), 1fr)
+  );
+}
+
+@media (max-width: 639px) {
+  .compass-v3 .compass-results-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Craving Compass — four slightly wider cards on desktop */
+.compass-v3 .compass-results-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (min-width: 1200px) {
+  .compass-v3 .compass-results-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .compass-v3 .compass-results-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* Space between admin details/access panel and the red workspace card */
+.cmf-admin-workspace .cmf-admin-content + .cmf-admin-hero,
+.cmf-admin-workspace .cmf-admin-access + .cmf-admin-hero {
+  margin-top: 28px;
+}
+
+@media (max-width: 639px) {
+  .cmf-admin-workspace .cmf-admin-content + .cmf-admin-hero,
+  .cmf-admin-workspace .cmf-admin-access + .cmf-admin-hero {
+    margin-top: 20px;
+  }
+}
+/* Four-item mobile discovery dock */
+@media (max-width: 1023px) {
+  .cmf-mobile-nav-link {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .cmf-mobile-nav {
+    gap: 0;
+  }
+
+  .cmf-mobile-nav-link {
+    font-size: 0.625rem;
+  }
+}
+/* Keep the shared discovery navbar comfortable on very narrow screens. */
+@media (max-width: 360px) {
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] > span + span {
+    display: none;
+  }
+}
+/* Restore the brand text and fit the shared navbar at 320px. */
+@media (max-width: 360px) {
+  nav[aria-label="Main navigation"] {
+    padding-inline: 8px;
+    gap: 4px;
+  }
+
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] {
+    flex-shrink: 0;
+    gap: 4px;
+  }
+
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] > span:first-child {
+    width: 32px;
+    height: 32px;
+  }
+
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] > span + span {
+    display: flex;
+  }
+
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] > span + span > span:first-child {
+    font-size: 10px;
+  }
+
+  nav[aria-label="Main navigation"] > a[aria-label="Cheat Meal Finder - Home"] > span + span > span:last-child {
+    font-size: 7px;
+    letter-spacing: 0.08em;
+  }
+
+  nav[aria-label="Main navigation"] > div:last-child {
+    gap: 4px;
+  }
+
+  nav[aria-label="Main navigation"] > div:last-child > a:last-child {
+    padding-inline: 8px;
+  }
+}
